@@ -60,27 +60,41 @@ public class Map {
         }
         return spielfeld;
     }
-    /**
-     * Mit dieser Funktion wird das Spielfeld im Terminal ausgegeben.
-     */
-    public void ausgabeSpielfeld() {
-        System.out.println("Spielfeld:");
-        for (int i = 0; i < spielfeld.length; i++) {       // Jede Zeile des Spielfelds wird betrachtet.
-            if (i == 0) {
-                System.out.print("  ");
-                for (int t = 0; t < spielfeld[0].length; t++) {
-                    System.out.print(t);
-                }
-                System.out.println();
-                System.out.println(" " + repeat(spielfeld[0].length + 2, "*"));
+
+    @Override
+    public String toString()
+    {
+        StringBuilder str = new StringBuilder("Spielfeld: \n   ");
+        StringBuilder firstRow = new StringBuilder("   ");
+        for (int k = 0; k<spielfeld[0].length; k ++){
+            if (k % 10 == 0){
+                str.append(k/10);
+            }else{
+                str.append(" ");
             }
-            System.out.print(i + "*");
-            for (int j = 0; j < spielfeld[i].length; j++) {// Jede Spalte des Spielfelds wird betrachtet.
-                System.out.print(spielfeld[i][j]);
-            }
-            System.out.println("*");
+            firstRow.append(k % 10);
         }
-        System.out.println(" " + repeat(spielfeld[0].length + 2, "*"));
+
+        str.append("\n");
+        str.append(firstRow.toString());
+        str.append("\n ");
+        str.append(" " + repeat(spielfeld[0].length + 2, "*"));
+        str.append("\n");
+
+        for (int i = 0 ; i<spielfeld.length ; i ++ ){
+            if (i % 10 == 0){
+                str.append(i/10);
+            }else{
+                str.append(" ");
+            }
+            str.append(i % 10 + "*");
+            for (int j = 0 ; j < spielfeld[i].length ; j++){
+                str.append(spielfeld[i][j]);
+            }
+            str.append("*\n");
+        }
+        str.append("  " + repeat(spielfeld[0].length + 2, "*"));
+        return str.toString();
     }
 
     public static String repeat(int count, String with) {

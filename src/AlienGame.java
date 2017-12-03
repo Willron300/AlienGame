@@ -7,9 +7,11 @@ public class AlienGame {
             int breite = Integer.parseInt(args[0]);
             int laenge = Integer.parseInt(args[1]);
             int anzahlAliens = Integer.parseInt(args[2]);
-            Map spielfeld = new Map(breite, laenge, anzahlAliens);        // Erzeuge Spielfeld.
+            Map spielfeld = new Map(laenge, breite, anzahlAliens);        // Erzeuge Spielfeld.
             spielfeld.ausgabeSpielfeld();
-            spiele(spielfeld);
+            System.out.println("Test");
+            System.out.println(spielfeld);
+            //spiele(spielfeld);
         }
     }
     public static void spiele(Map spielfeld) {
@@ -45,16 +47,26 @@ public class AlienGame {
     public static int[] scan(){
         int[] newKoord = new int[2];
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Wohin soll der Spieler angreifen? Gebe 2 Werte ein (X-Koordinate, Y-Koordinate) : ");
-        int anzahl = 1;
-        while (anzahl >= 0) {
-            int s = scanner.nextInt();
-            newKoord[anzahl] = s;
-            System.out.println(s);
-            anzahl--;
+        while(true){
+
+            System.out.print("Wohin soll der Spieler angreifen? Gebe 2 Werte ein (X-Koordinate, Y-Koordinate) : ");
+                int anzahl = 1;
+                while (anzahl >= 0) {
+                    int s = scanner.nextInt();
+                    newKoord[anzahl] = s;
+                    System.out.println(s);
+                    anzahl--;
+                }
+            if (uberprufeKoord(newKoord)){
+                    break;
+            }
         }
         return newKoord;
     }
+    public static Boolean uberprufeKoord(int[] koord) {
+        return true;
+    }
+
     public static Boolean ende(Map spielfeld) {
         if(spielfeld.spieler.leben < 1)
             return false;
