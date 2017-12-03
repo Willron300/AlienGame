@@ -1,34 +1,38 @@
 /**
- * Diese Klasse erzeugt ein Spielfeld vom Type Char[][] mit zufällig besetzten Spieler und Aliens.
- *
+ * Diese Klasse erzeugt ein Spielfeld vom Typ char[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
+ * Das Spielfeld wird mit Leerzeichen sowie P und A bestetzt und das entsprechende Objekt mit den passenden
+ * Koordinaten erzeugt.
+ * Die Klasse hat drei Klassenavariabeln: spielfeld, spieler und aliens.
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Map {
-    /**
-     * Die Main-Methode prueft als erstes die Kommandozeilenparameter auf Fehler.
-     * Dann wird ein Spielfeld vom Type Char[][] erzeugt und mit Leerzeichen besetzt.
-     * Danach wird das Spielfeld zufaellig mit einen Spieler und einer gewissen Anzahl von Aliens besetzt.
-     * Zuletzt wird das Spielfeld im Terminal fargestellt.
-     * param args 	Kommandozeilenparameter sollte aus 3 Elementen bestehen der Alienanzahl, der Breite und Laenge.
-     */
     char[][] spielfeld;
     Player spieler;
     Alien[] aliens;
-
-    public Map(int breite, int leange, int anzahlAliens) {
-        this.aliens = new Alien[anzahlAliens];
-        this.spielfeld = new char[breite][leange];
-        this.spielfeld = besetzeLeerzeichen(spielfeld);
-        this.spielfeld = besetzeSpieler(anzahlAliens, breite, leange);
-
-    }
     /**
-     * Die Funktion besetzt das, als Parameter uebergebene Spielfeld, zufällig mit Aliens und einem Spieler.
+     * Dann wird ein Spielfeld vom Type Char[][] erzeugt und mit Leerzeichen besetzt.
+     * Danach wird das Spielfeld zufaellig mit einen Spieler und einer gewissen Anzahl von Aliens besetzt.
+     * Wobei auch das Player-Objekt und die Liste von Alien-Objekte erzeugt werden.
      *
      * @param anzahlAliens		Anzahl von Aliens als Integer.
      * @param breite		    Breite des Spielfeld als Integer.
-     * @param laenge		    Leange des Spielfeld als Integer.
+     * @param laenge		    Laenge des Spielfeld als Integer.
+     */
+    public Map(int breite, int laenge, int anzahlAliens) {
+        this.aliens = new Alien[anzahlAliens];
+        this.spielfeld = new char[breite][laenge];
+        this.spielfeld = besetzeLeerzeichen(spielfeld);
+        this.spielfeld = besetzeSpieler(anzahlAliens, breite, laenge);
+
+    }
+    /**
+     * Die Funktion besetzt das, als Parameter uebergebene Spielfeld, zufällig mit Aliens und einem Spieler
+     * und erzeuge dementsprechend die Objekte
+     *
+     * @param anzahlAliens		Anzahl von Aliens als Integer.
+     * @param breite		    Breite des Spielfeld als Integer.
+     * @param laenge		    Laenge des Spielfeld als Integer.
      * @return Ein Char[][] besetzt mit einer bestimmten Anzahl von Aliens und einem Spieler.
      */
     char[][] besetzeSpieler(int anzahlAliens, int breite, int laenge) {
@@ -60,19 +64,22 @@ public class Map {
         }
         return spielfeld;
     }
-
+    /**
+     * Die Funktion ueberschreibt die toString Methode und wandelt das Char[][] in einem String um.
+     * return str       Das Spielfeld(char[][]) wird dargestellt als String
+     */
     @Override
     public String toString()
     {
-        StringBuilder str = new StringBuilder("Spielfeld: \n   ");
+        StringBuilder str = new StringBuilder("Spielfeld: \n   ");      // Erzeuge ein Stringbuilder Objekt
         StringBuilder firstRow = new StringBuilder("   ");
         for (int k = 0; k<spielfeld[0].length; k ++){
             if (k % 10 == 0){
-                str.append(k/10);
+                str.append(k/10);                                       // Fuege den Zehner-Zahl hinzu
             }else{
                 str.append(" ");
             }
-            firstRow.append(k % 10);
+            firstRow.append(k % 10);                                    // Fuege den Einzer-Zahl hinzu
         }
 
         str.append("\n");
@@ -81,14 +88,14 @@ public class Map {
         str.append(" " + repeat(spielfeld[0].length + 2, "*"));
         str.append("\n");
 
-        for (int i = 0 ; i<spielfeld.length ; i ++ ){
+        for (int i = 0 ; i<spielfeld.length ; i ++ ){                   // Jede Zeile wird abgearbeitet
             if (i % 10 == 0){
-                str.append(i/10);
+                str.append(i/10);                                       // Fuege den Zehner-Zahl hinzu
             }else{
                 str.append(" ");
             }
-            str.append(i % 10 + "*");
-            for (int j = 0 ; j < spielfeld[i].length ; j++){
+            str.append(i % 10 + "*");                                   // Fuege den Einzer-Zahl hinzu
+            for (int j = 0 ; j < spielfeld[i].length ; j++){            // Jede Spalte wird abgearbeitet
                 str.append(spielfeld[i][j]);
             }
             str.append("*\n");
@@ -96,7 +103,12 @@ public class Map {
         str.append("  " + repeat(spielfeld[0].length + 2, "*"));
         return str.toString();
     }
-
+    /**
+     * Diese Funktion erzeugt einen String. Ein String wir x-Mal wiederholt.
+     * @param count	 Anzahl der Wiederholungen
+     * @param with	 String der wiederholt werden soll.
+     * @return String; Der neu erzeugte lange String
+     */
     public static String repeat(int count, String with) {
         return new String(new char[count]).replace("\0", with);
     }
