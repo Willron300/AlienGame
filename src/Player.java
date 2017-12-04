@@ -25,15 +25,15 @@ public class Player {
      * @param spielfeld		Map-Objekt
      */
     public void angriff(Alien alien, Map spielfeld) {
-        int wahrscheinlichkeit = (int) (100.0 - (100.0* (1.0-(1.0/distance(alien)))));
+        int wahrscheinlichkeit = (int) (100.0 - (100.0 * (1.0 - (1.0 / distance(alien)))));
         int zufall = (int) (Math.random() * 100);
 
-        if(wahrscheinlichkeit > zufall) {
+        if (wahrscheinlichkeit > zufall) {
             System.out.println(" ; rein");
             alien.leben = false;
             spielfeld.spielfeld[alien.koor_x][alien.koor_y] = 'X';
-            System.out.println("Der Spieler hat das Alien getroffen, an Postition " +alien);
-        }else{
+            System.out.println("Der Spieler hat das Alien getroffen, an Postition " + alien);
+        } else {
             System.out.println("Der Spieler hat das Alien verfehlt, an Postition " + alien);
         }
 

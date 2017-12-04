@@ -1,3 +1,4 @@
+import java.util.*;
 /**
  * Die Klasse spielt das Spiel. Zuerst wird ein Map Objekt erzeugt in dem alle wichtigen Parameter erzeugt werden.
  * Dann werden neue Koordinaten eingelesen und ueberprueft. Als naechstes hat der Spieler seinen Zug und dann der
@@ -6,15 +7,13 @@
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
-import java.util.*;
-
 public class AlienGame {
     /**
      * Die Main-Methode prueft als erstes die Kommandozeilenparameter auf Fehler.
      * Dann wird ein Map Objekt erzeugt.
      * Danach wird die Funktion spiele ausgefuehrt in welcher solange die Zuege wiederholt werden, bis es einen
      * Gewinner gibt.
-     * param args 	Kommandozeilenparameter sollte aus 3 Elementen bestehen der Alienanzahl, der Breite und Laenge.
+     * @param args 	Kommandozeilenparameter sollte aus 3 Elementen bestehen der Alienanzahl, der Breite und Laenge.
      */
     public static void main(String[] args) {
         boolean fehlermeldung = findeFehler(args);                      // Ueberprueft die Parameter der Funktion.
@@ -36,7 +35,7 @@ public class AlienGame {
      */
     public static void spiele(Map spielfeld) {
 
-        while(ende(spielfeld)) {                                         // Ueberpruft ob das Spiel zu Ende ist
+        while (ende(spielfeld)) {                                         // Ueberpruft ob das Spiel zu Ende ist
             System.out.println(spielfeld);
             System.out.println(" Der Spieler hat noch " + spielfeld.spieler.leben + "Hitpoints");
 
@@ -56,8 +55,8 @@ public class AlienGame {
      * @param koord		    Liste von Integer mit den anzugreifenden Koordinaten fur den Spieler
      */
     public static void angriffSpieler(Map spielfeld, int[] koord) {
-        for(Alien alien: spielfeld.aliens) {
-            if(alien.koor_x == koord[0] && alien.koor_y == koord[1]) {
+        for (Alien alien: spielfeld.aliens) {
+            if (alien.koor_x == koord[0] && alien.koor_y == koord[1]) {
                 spielfeld.spieler.angriff(alien, spielfeld);            // Angriffsfunktion der Player-Klasse
             }
         }
@@ -68,8 +67,8 @@ public class AlienGame {
      * @param spielfeld		Map-Objekt
      */
     public static void angriffAliens(Map spielfeld) {
-        for(Alien alien: spielfeld.aliens) {
-            if(alien.leben) {
+        for (Alien alien: spielfeld.aliens) {
+            if (alien.leben) {
                 alien.angriff(spielfeld.spieler, spielfeld);            // Angriffsfunktion der Alien-Klasse
             }
         }
@@ -83,10 +82,10 @@ public class AlienGame {
      * @param spielfeld		Map-Objekt
      * @return Ein int[] besetzt mit neuen Koordinaten
      */
-    public static int[] scan(Map spielfeld){
+    public static int[] scan(Map spielfeld) {
         int[] newKoord = new int[2];                                    // Koordinaten sollen in Liste stehen
 
-        while(true){                                                    // Solange wiederholt bis passende gefunden
+        while (true) {                                                   // Solange wiederholt bis passende gefunden
             try {
                 Scanner scanner = new Scanner(System.in);               // Scanner-Modul
                 System.out.print("Wohin soll der Spieler angreifen? Gebe 2 Werte ein (X-Koordinate, Y-Koordinate) : ");
@@ -96,9 +95,9 @@ public class AlienGame {
                     newKoord[anzahl] = s;                               // in Liste eingefugt
                     anzahl--;
                 }
-                if (ueberprufeKoord(newKoord, spielfeld)){              // Ueberprueft Koordinaten auf Fehler.
+                if (ueberprufeKoord(newKoord, spielfeld)) {             // Ueberprueft Koordinaten auf Fehler.
                     break;                                              // Falls alles i.O. wird While abgebrochen
-                }else {
+                } else {
 
                     /*
 				        Hier werden alle moeglichen Koordinaten in dieser For-Schleife auf dem Terminal
@@ -107,7 +106,7 @@ public class AlienGame {
                     System.out.println("Moeglich Koordinaten sind : ");
                     int i = 0;
                     for (Alien alien: spielfeld.aliens) {
-                        if (alien.leben){
+                        if (alien.leben) {
                             if (i % 10 == 0 && i > 0) {                 // Modulo , damit nach 10 Koord Zeilenumbruch
                                 System.out.println();
                             }
@@ -138,27 +137,27 @@ public class AlienGame {
             return false;
         }
         if (koord[0] < 0 || koord[1] < 0) {
-            System.out.println("Eine der Koordinaten ist negativ (" + koord[1]+ "," + koord[0] + ")");
+            System.out.println("Eine der Koordinaten ist negativ (" + koord[1] + "," + koord[0] + ")");
             return false;
         }
-        if (koord[0] > spielfeld.spielfeld.length-1 || koord[1] > spielfeld.spielfeld[0].length-1) {
-            System.out.println("Koordinaten ausserhalb des Spielfeldes (" + koord[1]+ "," + koord[0] + ")");
+        if (koord[0] > spielfeld.spielfeld.length - 1 || koord[1] > spielfeld.spielfeld[0].length - 1) {
+            System.out.println("Koordinaten ausserhalb des Spielfeldes (" + koord[1] + "," + koord[0] + ")");
             return false;
         }
-        Boolean check_alien = false;
+        Boolean checkalien = false;
         for (Alien alien: spielfeld.aliens) {
             if (!alien.leben && koord[0] == alien.koor_x && koord[1] == alien.koor_y) {
-                System.out.println("Koordinaten treffen einen toten Alien (" + koord[1]+ "," + koord[0] + ")");
+                System.out.println("Koordinaten treffen einen toten Alien (" + koord[1] + "," + koord[0] + ")");
                 return false;
             }
             if (koord[0] == alien.koor_x && koord[1] == alien.koor_y) {
-                check_alien = true;
+                checkalien = true;
             }
         }
-        if (!check_alien){
-            System.out.println("Koordinaten treffen keinen Alien (" + koord[1]+ "," + koord[0] + ")");
+        if (!checkalien) {
+            System.out.println("Koordinaten treffen keinen Alien (" + koord[1] + "," + koord[0] + ")");
             return false;
-        }else {
+        } else {
             return true;
         }
     }
@@ -169,16 +168,17 @@ public class AlienGame {
      * @return true falls Spieler und Aliens noch leben, ansonsten falls.
      */
     public static Boolean ende(Map spielfeld) {
-        if(spielfeld.spieler.leben < 1)
+        if (spielfeld.spieler.leben < 1) {
             return false;
+        }
 
-        Boolean check_alien = false;
-        for(Alien alien: spielfeld.aliens){
-            if (alien.leben){
-                check_alien = true;
+        Boolean checkalien = false;
+        for (Alien alien: spielfeld.aliens) {
+            if (alien.leben) {
+                checkalien = true;
             }
         }
-        return check_alien;
+        return checkalien;
     }
     /**
      * Diese Funktion ueberprueft wer das Spiel gewonnen hat und gibt eine entsprechende Nachricht aus.
@@ -186,7 +186,7 @@ public class AlienGame {
      * @param spielfeld		Map-Objekt
      */
     public static void gewinnNachricht(Map spielfeld) {
-        if (spielfeld.spieler.leben == 0){
+        if (spielfeld.spieler.leben == 0) {
             System.out.println("Du Lappen hast vorloren.");
         } else {
             System.out.println("GG too easy. Alle Aliens wurden erlegigt");

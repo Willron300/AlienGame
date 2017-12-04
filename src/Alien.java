@@ -26,12 +26,12 @@ public class Alien {
      */
     public void angriff(Player spieler, Map spielfeld) {
         if (spieler.leben > 0) {
-            int wahrscheinlichkeit = (int) (100.0 - (100.0* (1.0-(1.0/distance(spieler)))));
+            int wahrscheinlichkeit = (int) (100.0 - (100.0 * (1.0 - (1.0 / distance(spieler)))));
             int zufall = (int) (Math.random() * 100);
-            if(wahrscheinlichkeit > zufall) {
+            if (wahrscheinlichkeit > zufall) {
                 spieler.leben--;
                 System.out.println("Der Alien (" + koor_y + "," + koor_x + ") hat den Spieler getroffen");
-            }else{
+            } else {
                 System.out.println("Der Alien (" + koor_y + "," + koor_x + ") hat das Spieler verfehlt");
             }
         }

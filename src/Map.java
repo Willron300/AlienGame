@@ -69,14 +69,13 @@ public class Map {
      * return str       Das Spielfeld(char[][]) wird dargestellt als String
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder str = new StringBuilder("Spielfeld: \n   ");      // Erzeuge ein Stringbuilder Objekt
         StringBuilder firstRow = new StringBuilder("   ");
-        for (int k = 0; k<spielfeld[0].length; k ++){
-            if (k % 10 == 0){
-                str.append(k/10);                                       // Fuege den Zehner-Zahl hinzu
-            }else{
+        for (int k = 0; k < spielfeld[0].length; k++) {
+            if (k % 10 == 0) {
+                str.append(k / 10);                                       // Fuege den Zehner-Zahl hinzu
+            } else {
                 str.append(" ");
             }
             firstRow.append(k % 10);                                    // Fuege den Einzer-Zahl hinzu
@@ -88,14 +87,14 @@ public class Map {
         str.append(" " + repeat(spielfeld[0].length + 2, "*"));
         str.append("\n");
 
-        for (int i = 0 ; i<spielfeld.length ; i ++ ){                   // Jede Zeile wird abgearbeitet
-            if (i % 10 == 0){
-                str.append(i/10);                                       // Fuege den Zehner-Zahl hinzu
-            }else{
+        for (int i = 0; i < spielfeld.length; i++ ) {                   // Jede Zeile wird abgearbeitet
+            if (i % 10 == 0) {
+                str.append(i / 10);                                       // Fuege den Zehner-Zahl hinzu
+            } else {
                 str.append(" ");
             }
             str.append(i % 10 + "*");                                   // Fuege den Einzer-Zahl hinzu
-            for (int j = 0 ; j < spielfeld[i].length ; j++){            // Jede Spalte wird abgearbeitet
+            for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
                 str.append(spielfeld[i][j]);
             }
             str.append("*\n");
