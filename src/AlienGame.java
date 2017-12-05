@@ -144,17 +144,17 @@ public class AlienGame {
             System.out.println("Koordinaten ausserhalb des Spielfeldes (" + koord[1] + "," + koord[0] + ")");
             return false;
         }
-        Boolean checkalien = false;
+        Boolean checkAlien = false;
         for (Alien alien: spielfeld.aliens) {
             if (!alien.leben && koord[0] == alien.koor_x && koord[1] == alien.koor_y) {
                 System.out.println("Koordinaten treffen einen toten Alien (" + koord[1] + "," + koord[0] + ")");
                 return false;
             }
             if (koord[0] == alien.koor_x && koord[1] == alien.koor_y) {
-                checkalien = true;
+                checkAlien = true;
             }
         }
-        if (!checkalien) {
+        if (!checkAlien) {
             System.out.println("Koordinaten treffen keinen Alien (" + koord[1] + "," + koord[0] + ")");
             return false;
         } else {
@@ -172,13 +172,13 @@ public class AlienGame {
             return false;
         }
 
-        Boolean checkalien = false;
+        Boolean checkAlien = false;
         for (Alien alien: spielfeld.aliens) {
             if (alien.leben) {
-                checkalien = true;
+                checkAlien = true;
             }
         }
-        return checkalien;
+        return checkAlien;
     }
     /**
      * Diese Funktion ueberprueft wer das Spiel gewonnen hat und gibt eine entsprechende Nachricht aus.
