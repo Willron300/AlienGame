@@ -1,6 +1,7 @@
 import java.util.*;
 /**
- * Die Klasse spielt das Spiel. Zuerst wird ein Map Objekt erzeugt in dem alle wichtigen Parameter erzeugt werden.
+ * Die Klasse spielt das Spiel. Zuerst fuehrem wir eine Funktion aus in welcher ein Spielertyp bestimmt wird.
+ * Danach wird ein Map Objekt erzeugt in dem alle wichtigen Parameter erzeugt werden.
  * Dann werden neue Koordinaten eingelesen und ueberprueft. Als naechstes hat der Spieler seinen Zug und dann der
  * Alien. Zudem prueft die Klasse nach jedem Zug ob es einen Gewinner gibt. Falls ja wird eine Nachricht generiert.
  *
@@ -10,7 +11,7 @@ import java.util.*;
 public class AlienGame {
     /**
      * Die Main-Methode prueft als erstes die Kommandozeilenparameter auf Fehler.
-     * Dann wird ein Map Objekt erzeugt.
+     * Danach kann der Spieler ein Spielertyp bestimmen. Dann wird ein Map Objekt erzeugt.
      * Danach wird die Funktion spiele ausgefuehrt in welcher solange die Zuege wiederholt werden, bis es einen
      * Gewinner gibt.
      * @param args 	Kommandozeilenparameter sollte aus 3 Elementen bestehen der Alienanzahl, der Breite und Laenge.
@@ -21,7 +22,10 @@ public class AlienGame {
             int breite = Integer.parseInt(args[0]);
             int laenge = Integer.parseInt(args[1]);
             int anzahlAliens = Integer.parseInt(args[2]);
-            Map spielfeld = new Map(laenge, breite, anzahlAliens);      // Erzeuge Map-Objekt
+
+            int spielerTyp = getSpielerTyp();                           // Waehle ein Spielertyp
+
+            Map spielfeld = new Map(laenge, breite, anzahlAliens, spielerTyp);      // Erzeuge Map-Objekt
 
             spiele(spielfeld);                                          // Starte das Spiel
         }
@@ -37,7 +41,7 @@ public class AlienGame {
 
         while (ende(spielfeld)) {                                         // Ueberpruft ob das Spiel zu Ende ist
             System.out.println(spielfeld);
-            System.out.println(" Der Spieler hat noch " + spielfeld.spieler.leben + "Hitpoints");
+            System.out.println(" Der Spieler hat noch " + spielfeld.getSpieler().getLeben() + "Hitpoints");
 
             int[] newKoord = scan(spielfeld);                           // Neue Koordinaten werden eingelesen
 
@@ -49,27 +53,28 @@ public class AlienGame {
 
     }
     /**
-     * Die Funktion sucht den Alien, welcher attackiert werden soll, und fuehrt dann einen Angriff auf diesen Alien
+     * Die Funktion sucht alle Aliens, welche attackiert werden sollen, und fuehrt dann einen Angriff auf diese Aliens
      * aus.
      * @param spielfeld		Map-Objekt
      * @param koord		    Liste von Integer mit den anzugreifenden Koordinaten fur den Spieler
      */
     public static void angriffSpieler(Map spielfeld, int[] koord) {
-        for (Alien alien: spielfeld.aliens) {
-            if (alien.koor_x == koord[0] && alien.koor_y == koord[1]) {
-                spielfeld.spieler.angriff(alien, spielfeld);            // Angriffsfunktion der Player-Klasse
+        for (int[] ziele: spielfeld.getSpieler().getZiel()) {                     // Ueperprueft alle Angriffsziele
+            for (Alien alien : spielfeld.getAliens()) {
+                if (alien.getKoorX() == koord[0] + ziele[0] && alien.getKoorY() == koord[1] + ziele[1]) {
+                    spielfeld.getSpieler().angriff(alien, spielfeld);            // Angriffsfunktion der Player-Klasse
+                }
             }
         }
     }
     /**
-     * Die Funktion laesst jeden Alien den Spieler angreifen
-     *
+     * Die Funktion laesst jeden Alien den Spieler angreifen.
      * @param spielfeld		Map-Objekt
      */
     public static void angriffAliens(Map spielfeld) {
-        for (Alien alien: spielfeld.aliens) {
-            if (alien.leben) {
-                alien.angriff(spielfeld.spieler, spielfeld);            // Angriffsfunktion der Alien-Klasse
+        for (Alien alien: spielfeld.getAliens()) {
+            if (alien.getLeben()) {
+                alien.angriff(spielfeld.getSpieler());            // Angriffsfunktion der Alien-Klasse
             }
         }
     }
@@ -105,8 +110,8 @@ public class AlienGame {
 			        */
                     System.out.println("Moeglich Koordinaten sind : ");
                     int i = 0;
-                    for (Alien alien: spielfeld.aliens) {
-                        if (alien.leben) {
+                    for (Alien alien: spielfeld.getAliens()) {
+                        if (alien.getLeben()) {
                             if (i % 10 == 0 && i > 0) {                 // Modulo , damit nach 10 Koord Zeilenumbruch
                                 System.out.println();
                             }
@@ -132,25 +137,25 @@ public class AlienGame {
      * @return  true falls keine Fehler gefunden wurden, ansonsten false.
      */
     public static Boolean ueberprufeKoord(int[] koord, Map spielfeld) {
-        if (koord[0] == spielfeld.spieler.koor_x && koord[1] == spielfeld.spieler.koor_y) {
-            System.out.println("Koordinate kann nicht angegriffen werden, dort sitzt der Spieler " + spielfeld.spieler);
+        if (koord[0] == spielfeld.getSpieler().getKoorX() && koord[1] == spielfeld.getSpieler().getKoorY()) {
+            System.out.println("Koordinate kann nicht angegriffen werden, dort sitzt der Spieler " + spielfeld.getSpieler());
             return false;
         }
         if (koord[0] < 0 || koord[1] < 0) {
             System.out.println("Eine der Koordinaten ist negativ (" + koord[1] + "," + koord[0] + ")");
             return false;
         }
-        if (koord[0] > spielfeld.spielfeld.length - 1 || koord[1] > spielfeld.spielfeld[0].length - 1) {
+        if (koord[0] > spielfeld.getSpielfeld().length - 1 || koord[1] > spielfeld.getSpielfeld()[0].length - 1) {
             System.out.println("Koordinaten ausserhalb des Spielfeldes (" + koord[1] + "," + koord[0] + ")");
             return false;
         }
         Boolean checkAlien = false;
-        for (Alien alien: spielfeld.aliens) {
-            if (!alien.leben && koord[0] == alien.koor_x && koord[1] == alien.koor_y) {
+        for (Alien alien: spielfeld.getAliens()) {
+            if (!alien.getLeben() && koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
                 System.out.println("Koordinaten treffen einen toten Alien (" + koord[1] + "," + koord[0] + ")");
                 return false;
             }
-            if (koord[0] == alien.koor_x && koord[1] == alien.koor_y) {
+            if (koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
                 checkAlien = true;
             }
         }
@@ -168,13 +173,13 @@ public class AlienGame {
      * @return true falls Spieler und Aliens noch leben, ansonsten falls.
      */
     public static Boolean ende(Map spielfeld) {
-        if (spielfeld.spieler.leben < 1) {
+        if (spielfeld.getSpieler().getLeben() < 1) {
             return false;
         }
 
         Boolean checkAlien = false;
-        for (Alien alien: spielfeld.aliens) {
-            if (alien.leben) {
+        for (Alien alien: spielfeld.getAliens()) {
+            if (alien.getLeben()) {
                 checkAlien = true;
             }
         }
@@ -186,11 +191,44 @@ public class AlienGame {
      * @param spielfeld		Map-Objekt
      */
     public static void gewinnNachricht(Map spielfeld) {
-        if (spielfeld.spieler.leben == 0) {
+        if (spielfeld.getSpieler().getLeben() == 0) {
             System.out.println("Du Lappen hast vorloren.");
         } else {
             System.out.println("GG too easy. Alle Aliens wurden erlegigt");
         }
+    }
+    /**
+     * Diese Funktion erlaubt den zwischen den Spielertypen zu waehlen. Sie arbeitet dabei mit dem Scanner-Modul.
+     * Der eingelesene Integerwert wird noch ueperprueft und dann zurueckgegeben.
+     * @return Ein Integer welcher die Typnummer darstellt
+     */
+    public static int getSpielerTyp() {
+        String[] spielerTyp = {"Arteillerie", "Scharschütze"};
+        System.out.println("Entscheide welchen Spielertyp du benutzen m\u00f6chtest !");
+        System.out.println("Typnummer \t Typ");
+
+        for (int i = 0; i < spielerTyp.length; i++) {
+            System.out.println(i + "\t\t" + spielerTyp[i]);
+        }
+        Scanner scanner = new Scanner(System.in);               // Scanner-Modul
+        while (true) {
+            System.out.print("Typnummer: ");
+            try {
+                int s = scanner.nextInt();
+                if (0 <= s && s <= spielerTyp.length - 1) {
+                    return s;
+                } else {
+                    System.out.println("Bitte einen korrekte Typnummer eingeben!");
+                }
+
+            } catch (InputMismatchException e) {                           // falls ein String im Terminal angegeben
+                scanner = new Scanner(System.in);
+                System.out.println("Fehler bei der Eingabe. Bitte gebe einen korrekten Integer Wert ein");
+
+            }
+
+        }
+
     }
 
     /**

@@ -7,9 +7,10 @@
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Map {
-    char[][] spielfeld;
-    Player spieler;
-    Alien[] aliens;
+    private char[][] spielfeld;
+    private Player spieler;
+    private Alien[] aliens;
+    private int spielerTyp;
     /**
      * Dann wird ein Spielfeld vom Type Char[][] erzeugt und mit Leerzeichen besetzt.
      * Danach wird das Spielfeld zufaellig mit einen Spieler und einer gewissen Anzahl von Aliens besetzt.
@@ -18,17 +19,21 @@ public class Map {
      * @param anzahlAliens		Anzahl von Aliens als Integer.
      * @param breite		    Breite des Spielfeld als Integer.
      * @param laenge		    Laenge des Spielfeld als Integer.
+     * @param spielerTyp	    Spielertyp des Spielers als Integer.
      */
-    public Map(int breite, int laenge, int anzahlAliens) {
+    public Map(int breite, int laenge, int anzahlAliens, int spielerTyp) {
         this.aliens = new Alien[anzahlAliens];
         this.spielfeld = new char[breite][laenge];
+        this.spielerTyp = spielerTyp;
+
         this.spielfeld = besetzeLeerzeichen(spielfeld);
         this.spielfeld = besetzeSpieler(anzahlAliens, breite, laenge);
 
     }
     /**
      * Die Funktion besetzt das, als Parameter uebergebene Spielfeld, zufällig mit Aliens und einem Spieler
-     * und erzeuge dementsprechend die Objekte
+     * und erzeuge dementsprechend die Objekte. Zudem wird beim erzeugen des Spieler-Objektes noch der
+     * Spielertyp abgefragt und dieser spezielle erzeugt.
      *
      * @param anzahlAliens		Anzahl von Aliens als Integer.
      * @param breite		    Breite des Spielfeld als Integer.
@@ -36,7 +41,23 @@ public class Map {
      * @return Ein Char[][] besetzt mit einer bestimmten Anzahl von Aliens und einem Spieler.
      */
     char[][] besetzeSpieler(int anzahlAliens, int breite, int laenge) {
-        for (int i = 0; i < anzahlAliens + 1; i++) {
+        int xKoordSpieler = (int) (Math.random() * breite);		// Erzeuge zufaellige x-Koordinate
+        int yKoordSpieler = (int) (Math.random() * laenge);
+        switch (spielerTyp) {                                   // Fragt den Spielertyp ab
+            case 0:
+                spieler = new Artillerie(xKoordSpieler, yKoordSpieler);     // Erzeugt Artillerie Objekt
+                break;
+            case 1:
+                spieler = new Scharf(xKoordSpieler, yKoordSpieler);         // Erzeugt Scharfschuetzen Objekt
+                break;
+            default:
+                System.out.println("Fehler mit dem Spielertyp");
+                break;
+        }
+
+        spielfeld[xKoordSpieler][yKoordSpieler] = 'P';                      // Besetzte Koordinaten im Spielfeld
+
+        for (int i = 0; i < anzahlAliens; i++) {
             int x = (int) (Math.random() * breite);		// Erzeuge zufaellige x-Koordinate
             int y = (int) (Math.random() * laenge);     // Erzeuge zufaellige y-Koordinate
 			/*
@@ -49,18 +70,11 @@ public class Map {
                 x = (int) (Math.random() * breite);
                 y = (int) (Math.random() * laenge);
             }
-			/*
-				Das Spielfeld soll nur einen Spieler haben, daher wird beim dem ersten Ausfuhren der For-Schleife
-				ein Spieler erzeugt und ansonstens Aliens.
-			*/
-            if (i == 0) {
-                spielfeld[x][y] = 'P';
-                spieler = new Player(x, y);
-            } else {
-                spielfeld[x][y] = 'A';
-                Alien alien = new Alien(x, y);
-                aliens[i - 1] = alien;
-            }
+
+            spielfeld[x][y] = 'A';                                          // Besetzte Koordinaten im Spielfeld
+            Alien alien = new Alien(x, y);                                  // Erzeuge Alien-Objekt
+            aliens[i] = alien;
+
         }
         return spielfeld;
     }
@@ -123,5 +137,49 @@ public class Map {
             }
         }
         return spielfeld;
+    }
+    /**
+     * Abfrage der Spieler-Variable.
+     * @return Spieler Objekt.
+     */
+    public Player getSpieler() {
+        return spieler;
+    }
+    /**
+     * Zum Aendern der Spieler-Variable
+     * @param spieler  Das Spieler-Objekt
+     */
+    public void setSpieler(Player spieler) {
+        this.spieler = spieler;
+    }
+    /**
+     * Abfrage der Alien-Variable.
+     * @return  Liste von Aliens Objekten.
+     */
+    public Alien[] getAliens() {
+        return aliens;
+    }
+    /**
+     * Zum Aendern der Liste von Alien-Objekten.
+     * @param aliens  Liste von Alien-Objekten.
+     */
+    public void setAliens(Alien[] aliens) {
+        this.aliens = aliens;
+    }
+    /**
+     * Abfrage der Spielfeld-Variable.
+     * @return  Das Spielfeld vom Typ char[][].
+     */
+    public char[][] getSpielfeld() {
+        return spielfeld;
+    }
+    /**
+     * Zum Aendern der Liste von Alien-Objekten.
+     * @param value  Neuer Wert als String des Spielfeld an den Koordinaten X und Y.
+     * @param x  Integer als X-Koordinate
+     * @param y  Integer als Y-Koordinate.
+     */
+    public void setSpielfeld(char value, int x, int y) {
+        this.spielfeld[x][y] = value;
     }
 }

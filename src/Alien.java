@@ -1,60 +1,57 @@
 /**
- * Diese Klasse erzeugt ein Alien Objekt. Die Klasse hat drei Klassenvariabeln. Die X- und Y-Koordinate sowie ein
- * Boolean fur den Lebenstatus.
+ * Diese Klasse erzeugt ein Alien Objekt. Sie vererbt aus der Character-Klasse.
+ * Die Klasse hat 5 Klassenvariabeln. Die X- und Y-Koordinate sowie ein Boolean fur den Lebenstatus.
+ * Zudem eine Trefferwahrscheinlichkeit und Zielkoordinaten fuer einen Angriff.
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
-public class Alien {
-    int koor_x;
-    int koor_y;
-    Boolean leben = true;
+public class Alien extends Character {
+    private Boolean leben = true;
     /**
      * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
+     * Zudem werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
     public Alien(int x, int y) {
-        this.koor_x = x;
-        this.koor_y = y;
+        super(x, y);
+        int trefferWahrscheinlichkeit = 100;
+        int[][] ziel = {{0, 0}};
+        setTrefferWahrscheinlichkeit(trefferWahrscheinlichkeit);
+        setZiel(ziel);
     }
+
     /**
      * Diese Funktion fuehrt den Angriff des Alien auf den Spieler durch. Ob der Angriff erfolgt hat wird zufaellig
      * entschieden und haengt von der Distanz des Alien vom Spieler ab. Wenn der Spieler getroffen wird verliert der
      * Spieler ein Leben.
      * @param spieler		Player-Objekt
-     * @param spielfeld		Map-Objekt
      */
-    public void angriff(Player spieler, Map spielfeld) {
-        if (spieler.leben > 0) {
-            int wahrscheinlichkeit = (int) (100.0 - (100.0 * (1.0 - (1.0 / distance(spieler)))));
+    public void angriff(Player spieler) {
+        if (spieler.getLeben() > 0) {
+            int wahrscheinlichkeit = (int) (100.0 - (getTrefferWahrscheinlichkeit()
+                    * (1.0 - (1.0 / distance(spieler.getKoorX(), spieler.getKoorY())))));
             int zufall = (int) (Math.random() * 100);
             if (wahrscheinlichkeit > zufall) {
-                spieler.leben--;
-                System.out.println("Der Alien (" + koor_y + "," + koor_x + ") hat den Spieler getroffen");
+                spieler.setLeben();
+                System.out.println("Der Alien (" + getKoorY() + "," + getKoorX() + ") hat den Spieler getroffen");
             } else {
-                System.out.println("Der Alien (" + koor_y + "," + koor_x + ") hat das Spieler verfehlt");
+                System.out.println("Der Alien (" + getKoorY() + "," + getKoorX() + ") hat das Spieler verfehlt");
             }
         }
     }
     /**
-     * Diese Funktion berechnet die Distanz zwischen Alien und Spieler und gibt den Wert zurueck.
-     * @param spieler		Player-Objekt
-     * @return  Ein Integer welcher die Distanz von Alien zu Spieler enthalt
+     * Abfrage der Lebenstatus-Variable.
+     * @return Boolean des Lebenstatus.
      */
-    public int distance(Player spieler) {
-        int distance;
-        distance = Math.abs(koor_x - spieler.koor_x) + Math.abs(koor_y - spieler.koor_y);
-
-        return distance;
+    public Boolean getLeben() {
+        return leben;
     }
     /**
-     * Die Funktion ueberschreibt die toString Methode und erzeugt ein String mit den Koordinaten.
-     * return str       Die Koordinaten des Spielers als String
+     * Zum Aendern der Lebenstatus-Variable
+     * @param leben  Boolean des neuen Lebenstatus
      */
-    @Override
-    public String toString() {
-        String str = "(" + koor_y + "," + koor_x + ")";
-        return str;
+    public void setLeben(Boolean leben) {
+        this.leben = leben;
     }
-
 }
