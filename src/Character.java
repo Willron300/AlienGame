@@ -5,17 +5,20 @@
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Character {
+    private int leben;
     private int koorX;
     private int koorY;
     private int[][] ziel;
     private int trefferWahrscheinlichkeit;
+    private Interface bewegung;
 
     /**
      * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
-    public Character(int x, int y) {
+    public Character(int x, int y, int leben) {
+        this.leben = leben;
         this.koorX = x;
         this.koorY = y;
     }
@@ -83,5 +86,36 @@ public class Character {
         String str = "(" + koorY + "," + koorX + ")";
         return str;
     }
+    /**
+     * Abfrage der Lebenstatus-Variable.
+     * @return Integer des Lebenstatus.
+     */
+    public int getLeben() {
+        return leben;
+    }
+    /**
+     * Zum Aendern der Lebenstatus-Variable. Es wird ein Leben abgezogen.
+     */
+    public void setLeben() {
+        this.leben--;
+    }
 
+    public void setKoorX(int koorX) {
+        this.koorX = koorX;
+    }
+
+    public void setKoorY(int koorY) {
+        this.koorY = koorY;
+    }
+    public int[] getKoor() {
+        return new int[] {koorX,koorY};
+    }
+
+    public void setBewegung(int breite, int laenge) {
+        this.bewegung = new Interface(this, breite, laenge);
+    }
+
+    public Interface getBewegung() {
+        return bewegung;
+    }
 }

@@ -5,16 +5,14 @@
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Player extends Character {
-    private int leben = 5;
-
-
     /**
      * Beim erzeugen des Player-Objektes werden die Klassenvariabeln neu definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
     public Player(int x, int y) {
-        super(x, y);
+        super(x, y, 5);
+        this.getBewegung().setMaxLange(3);
     }
 
     /**
@@ -30,25 +28,12 @@ public class Player extends Character {
         int zufall = (int) (Math.random() * 100);
 
         if (wahrscheinlichkeit > zufall) {
-            alien.setLeben(false);
-            spielfeld.setSpielfeld('X', alien.getKoorX(), alien.getKoorY());
+            alien.setLeben();
             System.out.println("Der Spieler hat das Alien getroffen, an Postition " + alien);
         } else {
             System.out.println("Der Spieler hat das Alien verfehlt, an Postition " + alien);
         }
 
     }
-    /**
-     * Abfrage der Lebenstatus-Variable.
-     * @return Integer des Lebenstatus.
-     */
-    public int getLeben() {
-        return leben;
-    }
-    /**
-     * Zum Aendern der Lebenstatus-Variable. Es wird ein Leben abgezogen.
-     */
-    public void setLeben() {
-        this.leben--;
-    }
+
 }

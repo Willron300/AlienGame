@@ -6,7 +6,6 @@
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Alien extends Character {
-    private Boolean leben = true;
     /**
      * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
      * Zudem werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
@@ -14,11 +13,12 @@ public class Alien extends Character {
      * @param y		y-Koordinate
      */
     public Alien(int x, int y) {
-        super(x, y);
+        super(x, y, 1);
         int trefferWahrscheinlichkeit = 100;
         int[][] ziel = {{0, 0}};
         setTrefferWahrscheinlichkeit(trefferWahrscheinlichkeit);
         setZiel(ziel);
+        this.getBewegung().setMaxLange(2);
     }
 
     /**
@@ -39,19 +39,5 @@ public class Alien extends Character {
                 System.out.println("Der Alien (" + getKoorY() + "," + getKoorX() + ") hat das Spieler verfehlt");
             }
         }
-    }
-    /**
-     * Abfrage der Lebenstatus-Variable.
-     * @return Boolean des Lebenstatus.
-     */
-    public Boolean getLeben() {
-        return leben;
-    }
-    /**
-     * Zum Aendern der Lebenstatus-Variable
-     * @param leben  Boolean des neuen Lebenstatus
-     */
-    public void setLeben(Boolean leben) {
-        this.leben = leben;
     }
 }

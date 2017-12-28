@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * Diese Klasse erzeugt ein Spielfeld vom Typ char[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
  * Das Spielfeld wird mit Leerzeichen sowie P und A bestetzt und das entsprechende Objekt mit den passenden
@@ -7,7 +9,7 @@
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Map {
-    private char[][] spielfeld;
+    private Character[][] spielfeld;
     private Player spieler;
     private Alien[] aliens;
     private int spielerTyp;
@@ -23,11 +25,10 @@ public class Map {
      */
     public Map(int breite, int laenge, int anzahlAliens, int spielerTyp) {
         this.aliens = new Alien[anzahlAliens];
-        this.spielfeld = new char[breite][laenge];
+        this.spielfeld = new Character[breite][laenge];
         this.spielerTyp = spielerTyp;
 
-        this.spielfeld = besetzeLeerzeichen(spielfeld);
-        this.spielfeld = besetzeSpieler(anzahlAliens, breite, laenge);
+        this.spielfeld = besetzeSpielfeld(anzahlAliens, breite, laenge);
 
     }
     /**
@@ -40,7 +41,46 @@ public class Map {
      * @param laenge		    Laenge des Spielfeld als Integer.
      * @return Ein Char[][] besetzt mit einer bestimmten Anzahl von Aliens und einem Spieler.
      */
-    char[][] besetzeSpieler(int anzahlAliens, int breite, int laenge) {
+    public Character[][] besetzeSpielfeld(int anzahlAliens, int breite, int laenge) {
+        this.spieler = erzeugeSpieler(breite, laenge);
+        this.aliens = erzeugeAlien(spieler, breite, laenge, anzahlAliens);
+        aktualisiereSpielfeld();
+        return spielfeld;
+    }
+    public void aktualisiereSpielfeld() {
+        this.spielfeld = besetzeLeerzeichen(spielfeld);
+        this.spielfeld[spieler.getKoorX()][spieler.getKoorY()] = spieler;
+        for (Alien alien: aliens){
+            this.spielfeld[alien.getKoorX()][alien.getKoorY()] = alien;
+        }
+    }
+    public Alien[] erzeugeAlien(Player spieler, int breite, int laenge, int anzahlAliens) {
+        Alien[]alienList = new Alien[anzahlAliens];
+        int[][] koordi = new int[anzahlAliens][2];
+        for (int i = 0; i < anzahlAliens; i++) {
+            int x = (int) (Math.random() * breite);        // Erzeuge zufaellige x-Koordinate
+            int y = (int) (Math.random() * laenge);     // Erzeuge zufaellige y-Koordinate
+			/*
+				Die While-Schleife ueperprueft ob die Koordinaten des
+				Spielfeldes schon mit einem Alien oder Spieler besetzt
+				sind, ansonsten erzeugt sie solange neue Koordinaten,
+				bis er einen leeren Platz findet.
+			 */
+
+            int[] koor = new int[]{x, y};
+            while (contain(koordi, koor) || Arrays.equals(spieler.getKoor(), koor)) {
+                x = (int) (Math.random() * breite);
+                y = (int) (Math.random() * laenge);
+                koor = new int[]{x, y};
+            }
+            koordi[i] = koor;
+            Alien alien = new Alien(x, y);                      // Erzeuge Alien-Objekt
+            alien.setBewegung(breite, laenge);
+            alienList[i] = alien;
+        }
+        return alienList;
+    }
+    public Player erzeugeSpieler(int breite, int laenge) {
         int xKoordSpieler = (int) (Math.random() * breite);		// Erzeuge zufaellige x-Koordinate
         int yKoordSpieler = (int) (Math.random() * laenge);
         switch (spielerTyp) {                                   // Fragt den Spielertyp ab
@@ -54,30 +94,10 @@ public class Map {
                 System.out.println("Fehler mit dem Spielertyp");
                 break;
         }
-
-        spielfeld[xKoordSpieler][yKoordSpieler] = 'P';                      // Besetzte Koordinaten im Spielfeld
-
-        for (int i = 0; i < anzahlAliens; i++) {
-            int x = (int) (Math.random() * breite);		// Erzeuge zufaellige x-Koordinate
-            int y = (int) (Math.random() * laenge);     // Erzeuge zufaellige y-Koordinate
-			/*
-				Die While-Schleife ueperprueft ob die Koordinaten des
-				Spielfeldes schon mit einem Alien oder Spieler besetzt
-				sind, ansonsten erzeugt sie solange neue Koordinaten,
-				bis er einen leeren Platz findet.
-			 */
-            while (spielfeld[x][y] == 'P' || spielfeld[x][y] == 'A') {
-                x = (int) (Math.random() * breite);
-                y = (int) (Math.random() * laenge);
-            }
-
-            spielfeld[x][y] = 'A';                                          // Besetzte Koordinaten im Spielfeld
-            Alien alien = new Alien(x, y);                                  // Erzeuge Alien-Objekt
-            aliens[i] = alien;
-
-        }
-        return spielfeld;
+        spieler.setBewegung(breite, laenge);
+        return spieler;
     }
+
     /**
      * Die Funktion ueberschreibt die toString Methode und wandelt das Char[][] in einem String um.
      * return str       Das Spielfeld(char[][]) wird dargestellt als String
@@ -109,7 +129,20 @@ public class Map {
             }
             str.append(i % 10 + "*");                                   // Fuege den Einzer-Zahl hinzu
             for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
-                str.append(spielfeld[i][j]);
+                if (spielfeld[i][j] instanceof Character) {
+                    if (spielfeld[i][j] instanceof Player) {
+                        str.append("P");
+                    }
+                    if (spielfeld[i][j] instanceof Alien) {
+                        if (spielfeld[i][j].getLeben() == 1) {
+                            str.append("A");
+                        } else {
+                            str.append("X");
+                        }
+                    }
+                }else {
+                    str.append(" ");
+                }
             }
             str.append("*\n");
         }
@@ -130,13 +163,21 @@ public class Map {
      * @param spielfeld	 Ein Spielfeld von Type Char[][].
      * @return Ein Char[][] besetzt mit Leerzeichen.
      */
-    public static char[][] besetzeLeerzeichen(char[][] spielfeld) {
+    public static Character[][] besetzeLeerzeichen(Character[][] spielfeld) {
         for (int i = 0; i < spielfeld.length; i++) {
             for (int j = 0; j < spielfeld[i].length; j++) {
-                spielfeld[i][j] = ' ';
+                spielfeld[i][j] = null;
             }
         }
         return spielfeld;
+    }
+    public static boolean contain(int[][] arr, int [] item) {
+        for (int[] n : arr) {
+            if (Arrays.equals(item, n)) {
+                return true;
+            }
+        }
+        return false;
     }
     /**
      * Abfrage der Spieler-Variable.
@@ -170,16 +211,16 @@ public class Map {
      * Abfrage der Spielfeld-Variable.
      * @return  Das Spielfeld vom Typ char[][].
      */
-    public char[][] getSpielfeld() {
+    public Character[][] getSpielfeld() {
         return spielfeld;
     }
     /**
      * Zum Aendern der Liste von Alien-Objekten.
-     * @param value  Neuer Wert als String des Spielfeld an den Koordinaten X und Y.
+     * @param charakter  Neuer Wert als Character-Objekt des Spielfeld an den Koordinaten X und Y.
      * @param x  Integer als X-Koordinate
      * @param y  Integer als Y-Koordinate.
      */
-    public void setSpielfeld(char value, int x, int y) {
-        this.spielfeld[x][y] = value;
+    public void setSpielfeld(Character charakter, int x, int y) {
+        this.spielfeld[x][y] = charakter;
     }
 }

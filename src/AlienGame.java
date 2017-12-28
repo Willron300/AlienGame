@@ -43,9 +43,12 @@ public class AlienGame {
             System.out.println(spielfeld);
             System.out.println(" Der Spieler hat noch " + spielfeld.getSpieler().getLeben() + "Hitpoints");
 
+            spielfeld.getSpieler().getBewegung().start(spielfeld);
+
             int[] newKoord = scan(spielfeld);                           // Neue Koordinaten werden eingelesen
 
             angriffSpieler(spielfeld, newKoord);                        // Angriffszug des Spielers
+            spielfeld.getSpieler().getBewegung().start(spielfeld);
 
             angriffAliens(spielfeld);                                   // Angriffszug des Aliens
         }
@@ -73,7 +76,7 @@ public class AlienGame {
      */
     public static void angriffAliens(Map spielfeld) {
         for (Alien alien: spielfeld.getAliens()) {
-            if (alien.getLeben()) {
+            if (alien.getLeben() == 1) {
                 alien.angriff(spielfeld.getSpieler());            // Angriffsfunktion der Alien-Klasse
             }
         }
@@ -111,7 +114,7 @@ public class AlienGame {
                     System.out.println("Moeglich Koordinaten sind : ");
                     int i = 0;
                     for (Alien alien: spielfeld.getAliens()) {
-                        if (alien.getLeben()) {
+                        if (alien.getLeben() == 1) {
                             if (i % 10 == 0 && i > 0) {                 // Modulo , damit nach 10 Koord Zeilenumbruch
                                 System.out.println();
                             }
@@ -151,7 +154,7 @@ public class AlienGame {
         }
         Boolean checkAlien = false;
         for (Alien alien: spielfeld.getAliens()) {
-            if (!alien.getLeben() && koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
+            if (alien.getLeben()== 0 && koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
                 System.out.println("Koordinaten treffen einen toten Alien (" + koord[1] + "," + koord[0] + ")");
                 return false;
             }
@@ -179,7 +182,7 @@ public class AlienGame {
 
         Boolean checkAlien = false;
         for (Alien alien: spielfeld.getAliens()) {
-            if (alien.getLeben()) {
+            if (alien.getLeben() == 1) {
                 checkAlien = true;
             }
         }
