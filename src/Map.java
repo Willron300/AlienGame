@@ -49,17 +49,18 @@ public class Map {
     }
     public void aktualisiereSpielfeld() {
         this.spielfeld = besetzeLeerzeichen(spielfeld);
-        this.spielfeld[spieler.getKoorX()][spieler.getKoorY()] = spieler;
+        this.spielfeld[spieler.getKoorY()][spieler.getKoorX()] = spieler;
         for (Alien alien: aliens){
-            this.spielfeld[alien.getKoorX()][alien.getKoorY()] = alien;
+            this.spielfeld[alien.getKoorY()][alien.getKoorX()] = alien;
         }
     }
     public Alien[] erzeugeAlien(Player spieler, int breite, int laenge, int anzahlAliens) {
         Alien[]alienList = new Alien[anzahlAliens];
         int[][] koordi = new int[anzahlAliens][2];
+        Arrays.fill(koordi, null);
         for (int i = 0; i < anzahlAliens; i++) {
-            int x = (int) (Math.random() * breite);        // Erzeuge zufaellige x-Koordinate
-            int y = (int) (Math.random() * laenge);     // Erzeuge zufaellige y-Koordinate
+            int x = (int) (Math.random() * laenge);        // Erzeuge zufaellige x-Koordinate
+            int y = (int) (Math.random() * breite);     // Erzeuge zufaellige y-Koordinate
 			/*
 				Die While-Schleife ueperprueft ob die Koordinaten des
 				Spielfeldes schon mit einem Alien oder Spieler besetzt
@@ -69,9 +70,10 @@ public class Map {
 
             int[] koor = new int[]{x, y};
             while (contain(koordi, koor) || Arrays.equals(spieler.getKoor(), koor)) {
-                x = (int) (Math.random() * breite);
-                y = (int) (Math.random() * laenge);
+                x = (int) (Math.random() * laenge);
+                y = (int) (Math.random() * breite);
                 koor = new int[]{x, y};
+                System.out.println(Arrays.toString(koor)+ "  ");
             }
             koordi[i] = koor;
             Alien alien = new Alien(x, y);                      // Erzeuge Alien-Objekt
@@ -81,14 +83,17 @@ public class Map {
         return alienList;
     }
     public Player erzeugeSpieler(int breite, int laenge) {
-        int xKoordSpieler = (int) (Math.random() * breite);		// Erzeuge zufaellige x-Koordinate
-        int yKoordSpieler = (int) (Math.random() * laenge);
+        int xKoordSpieler = (int) (Math.random() * laenge);		// Erzeuge zufaellige x-Koordinate
+        int yKoordSpieler = (int) (Math.random() * breite);
         switch (spielerTyp) {                                   // Fragt den Spielertyp ab
             case 0:
                 spieler = new Artillerie(xKoordSpieler, yKoordSpieler);     // Erzeugt Artillerie Objekt
                 break;
             case 1:
                 spieler = new Scharf(xKoordSpieler, yKoordSpieler);         // Erzeugt Scharfschuetzen Objekt
+                break;
+            case 2:
+                spieler = new Laserstrahler(xKoordSpieler, yKoordSpieler);         // Erzeugt Scharfschuetzen Objekt
                 break;
             default:
                 System.out.println("Fehler mit dem Spielertyp");

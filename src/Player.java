@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Diese Klasse erzeugt ein Player Objekt. Sie vererbt aus der Character-Klasse.
  * Die Klasse hat drei Klassenvariabeln. Die X- und Y-Koordinate sowie ein Integer fur den Lebenspunkte.
@@ -11,8 +13,18 @@ public class Player extends Character {
      * @param y		y-Koordinate
      */
     public Player(int x, int y) {
-        super(x, y, 5);
-        this.getBewegung().setMaxLange(3);
+        super(x, y, 5, 3);
+        int trefferWahrscheinlichkeit = 100;
+        int[][] ziel = {{0, 0}};
+        setTrefferWahrscheinlichkeit(trefferWahrscheinlichkeit);
+        setZiel(ziel);
+    }
+
+    @Override
+    public String scanMove() {
+        System.out.print("Wohin soll der Spieler gehen : ");
+        Scanner scanner = new Scanner(System.in);
+        return scanner.next();
     }
 
     /**

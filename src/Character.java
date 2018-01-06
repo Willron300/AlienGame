@@ -11,16 +11,18 @@ public class Character {
     private int[][] ziel;
     private int trefferWahrscheinlichkeit;
     private Interface bewegung;
+    private int bewegungsMax;
 
     /**
      * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
-    public Character(int x, int y, int leben) {
+    public Character(int x, int y, int leben, int bewegungsMax) {
         this.leben = leben;
         this.koorX = x;
         this.koorY = y;
+        this.bewegungsMax = bewegungsMax;
     }
 
     /**
@@ -83,7 +85,7 @@ public class Character {
      */
     @Override
     public String toString() {
-        String str = "(" + koorY + "," + koorX + ")";
+        String str = "(" + koorX + "," + koorY + ")";
         return str;
     }
     /**
@@ -117,5 +119,12 @@ public class Character {
 
     public Interface getBewegung() {
         return bewegung;
+    }
+    public String scanMove(){
+        return null;
+    }
+
+    public int getBewegungsMax() {
+        return bewegungsMax;
     }
 }

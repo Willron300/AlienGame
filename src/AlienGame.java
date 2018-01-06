@@ -24,9 +24,7 @@ public class AlienGame {
             int anzahlAliens = Integer.parseInt(args[2]);
 
             int spielerTyp = getSpielerTyp();                           // Waehle ein Spielertyp
-
             Map spielfeld = new Map(laenge, breite, anzahlAliens, spielerTyp);      // Erzeuge Map-Objekt
-
             spiele(spielfeld);                                          // Starte das Spiel
         }
     }
@@ -45,11 +43,17 @@ public class AlienGame {
 
             spielfeld.getSpieler().getBewegung().start(spielfeld);
 
+            System.out.println(spielfeld);
+
             int[] newKoord = scan(spielfeld);                           // Neue Koordinaten werden eingelesen
 
             angriffSpieler(spielfeld, newKoord);                        // Angriffszug des Spielers
-            spielfeld.getSpieler().getBewegung().start(spielfeld);
+            for (Alien alien: spielfeld.getAliens()) {
+                if (alien.getLeben() == 1) {
+                    alien.getBewegung().start(spielfeld);
+                }
 
+            }
             angriffAliens(spielfeld);                                   // Angriffszug des Aliens
         }
         gewinnNachricht(spielfeld);                                     // Erzeugt Nachricht falls Spiel zu Ende
@@ -69,6 +73,7 @@ public class AlienGame {
                 }
             }
         }
+        System.out.println(Arrays.deepToString(spielfeld.getSpieler().getZiel()));
     }
     /**
      * Die Funktion laesst jeden Alien den Spieler angreifen.
@@ -97,11 +102,11 @@ public class AlienGame {
             try {
                 Scanner scanner = new Scanner(System.in);               // Scanner-Modul
                 System.out.print("Wohin soll der Spieler angreifen? Gebe 2 Werte ein (X-Koordinate, Y-Koordinate) : ");
-                int anzahl = 1;
-                while (anzahl >= 0) {                                   // 2 Koordinaten werden eingelesen
+                int anzahl = 0;
+                while (anzahl <= 1) {                                   // 2 Koordinaten werden eingelesen
                     int s = scanner.nextInt();
                     newKoord[anzahl] = s;                               // in Liste eingefugt
-                    anzahl--;
+                    anzahl++;
                 }
                 if (ueberprufeKoord(newKoord, spielfeld)) {             // Ueberprueft Koordinaten auf Fehler.
                     break;                                              // Falls alles i.O. wird While abgebrochen
@@ -145,17 +150,17 @@ public class AlienGame {
             return false;
         }
         if (koord[0] < 0 || koord[1] < 0) {
-            System.out.println("Eine der Koordinaten ist negativ (" + koord[1] + "," + koord[0] + ")");
+            System.out.println("Eine der Koordinaten ist negativ (" + koord[0] + "," + koord[1] + ")");
             return false;
         }
         if (koord[0] > spielfeld.getSpielfeld().length - 1 || koord[1] > spielfeld.getSpielfeld()[0].length - 1) {
-            System.out.println("Koordinaten ausserhalb des Spielfeldes (" + koord[1] + "," + koord[0] + ")");
+            System.out.println("Koordinaten ausserhalb des Spielfeldes (" + koord[0] + "," + koord[1] + ")");
             return false;
         }
         Boolean checkAlien = false;
         for (Alien alien: spielfeld.getAliens()) {
             if (alien.getLeben()== 0 && koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
-                System.out.println("Koordinaten treffen einen toten Alien (" + koord[1] + "," + koord[0] + ")");
+                System.out.println("Koordinaten treffen einen toten Alien (" + koord[0] + "," + koord[1] + ")");
                 return false;
             }
             if (koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
@@ -163,7 +168,7 @@ public class AlienGame {
             }
         }
         if (!checkAlien) {
-            System.out.println("Koordinaten treffen keinen Alien (" + koord[1] + "," + koord[0] + ")");
+            System.out.println("Koordinaten treffen keinen Alien (" + koord[0] + "," + koord[1] + ")");
             return false;
         } else {
             return true;
@@ -180,13 +185,12 @@ public class AlienGame {
             return false;
         }
 
-        Boolean checkAlien = false;
         for (Alien alien: spielfeld.getAliens()) {
             if (alien.getLeben() == 1) {
-                checkAlien = true;
+                return true;
             }
         }
-        return checkAlien;
+        return false;
     }
     /**
      * Diese Funktion ueberprueft wer das Spiel gewonnen hat und gibt eine entsprechende Nachricht aus.
@@ -206,7 +210,7 @@ public class AlienGame {
      * @return Ein Integer welcher die Typnummer darstellt
      */
     public static int getSpielerTyp() {
-        String[] spielerTyp = {"Arteillerie", "Scharschütze"};
+        String[] spielerTyp = {"Arteillerie", "Scharschütze", "Laserstrahler"};
         System.out.println("Entscheide welchen Spielertyp du benutzen m\u00f6chtest !");
         System.out.println("Typnummer \t Typ");
 
