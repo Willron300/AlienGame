@@ -1,16 +1,16 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * Diese Klasse erzeugt ein Artillerie-Objekt. Sie vererbt aus der Player-Klasse.
- * Das Artillerie Objekt hat eine schlechte Trefferwahrscheinlichkeit aber dafür greift zusatzlich alle Felder
+ * Das Laserstrahl Objekt hat eine schlechte Trefferwahrscheinlichkeit aber dafür greift zusatzlich alle Felder
  * darum an.
+ * Funktioniert noch nicht einwandfrei!!
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Laserstrahler extends Player {
     /**
-     * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
+     * Beim erzeugen des Laserstrahl-Objektes werden die Klassenvariabeln neu definiert.
      * Zudem werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
@@ -22,9 +22,16 @@ public class Laserstrahler extends Player {
         setTrefferWahrscheinlichkeit(trefferWahrscheinlichkeit);
         setZiel(ziel);
     }
+    /**
+     * Diese Funktion ist zustaendig für den Angriff des Laserstrahler Objektes. Diese verabndert bei jeden
+     * Angriff des Spielers die Zielvariable. Diese werden in dieser Funktion neu berechnet und dann wird
+     * der normale Angriff ausgefuehrt.
+     * @param alien         Der anzugreifende Alien
+     * @param spielfeld     Das Map Objekt
+     */
     @Override
     public void angriff(Alien alien, Map spielfeld) {
-        if (getZiel().length == 1){
+        if (getZiel().length == 1) {
             int aKoorX = alien.getKoorX();
             int aKoorY = alien.getKoorY();
 
@@ -34,17 +41,19 @@ public class Laserstrahler extends Player {
             double difX = aKoorX - pKoorX;
             double difY = aKoorY - pKoorY;
             double dif = Math.abs(Math.max(difX, difY));
-            System.out.printf("alien %d, %d ; spieler %d, %d ; dif= %d ; difX = %d ; difY = %d\n", aKoorX, aKoorY, pKoorX, pKoorY, (int) dif, (int) difX, (int) difY);
+            System.out.printf("alien %d, %d ; spieler %d, %d ; dif= %d ; difX = %d ; "
+                    + "difY = %d\n", aKoorX, aKoorY, pKoorX, pKoorY, (int) dif, (int) difX, (int) difY);
             int[][] ziel = new int[(int) dif][2];
-            for (int i = 1; i<=dif; i++) {
-                double kX = (double) 1/i * difX;
-                double kY = (double) 1/i * difY;
+            for (int i = 1; i <= dif; i++) {
+                double kX = (double) 1 / i * difX;
+                double kY = (double) 1 / i * difY;
                 int neuKoorX = (int) Math.round(kX);
                 int neuKoorY = (int) Math.round(kY);
 
                 ziel[i - 1][0] = neuKoorX;
                 ziel[i - 1][1] = neuKoorY;
-                System.out.printf("dif= %d ; neu %d, %d \n %s \n", (int) dif, neuKoorX, neuKoorY, Arrays.deepToString(ziel));
+                System.out.printf("dif= %d ; neu %d, %d \n %s \n",
+                        (int) dif, neuKoorX, neuKoorY, Arrays.deepToString(ziel));
             }
             System.out.println(Arrays.deepToString(ziel));
             setZiel(ziel);

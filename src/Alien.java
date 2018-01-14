@@ -2,15 +2,14 @@ import java.util.Random;
 
 /**
  * Diese Klasse erzeugt ein Alien Objekt. Sie vererbt aus der Character-Klasse.
- * Die Klasse hat 5 Klassenvariabeln. Die X- und Y-Koordinate sowie ein Boolean fur den Lebenstatus.
- * Zudem eine Trefferwahrscheinlichkeit und Zielkoordinaten fuer einen Angriff.
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Alien extends Character {
     /**
      * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
-     * Zudem werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
+     * Zudem wird das Character Objekt erzeugt mit den passenden Varaiabeln.
+     * Danach werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
@@ -21,13 +20,18 @@ public class Alien extends Character {
         setTrefferWahrscheinlichkeit(trefferWahrscheinlichkeit);
         setZiel(ziel);
     }
+    /**
+     * Diese Funktion ist zustaendig für den String der Bewegung des Aliens. Sie erzeugt einen zufaelligen String,
+     * aus den Elementen a, s, d, w.
+     * @return String       der zufaellig erzeugte String
+     */
     @Override
     public String scanMove() {
         StringBuilder moveString = new StringBuilder("");
         char[] richtungen = new char[] {'a', 's', 'd', 'w'};
 
         int schritte = (int) (Math.random() * (getBewegungsMax() + 1));
-        for (int i = 0; i<schritte; i++) {
+        for (int i = 0; i < schritte; i++) {
             int rnd = new Random().nextInt(richtungen.length);
             moveString.append(richtungen[rnd]);
         }

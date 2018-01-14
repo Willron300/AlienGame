@@ -29,8 +29,9 @@ public class AlienGame {
         }
     }
     /**
-     * Die Funktion zeigt als erstes das Spielfeld an. Nun werden Koordinaten eingelesen und dann hat der Spieler
-     * einen Angriffszug und dann die Aliens. Das wird solange wiederholt bis die ende-Funktion, welche ueberprueft
+     * Die Funktion zeigt als erstes das Spielfeld an. Dann hat der Spieler seinen Bewegungszug und danach seinen
+     * Angriffszug, dafuer werden jeweils Koordinaten eingelesen. Danach wiederholt sich das fuer die Aliens.
+     * Das wird solange wiederholt bis die ende-Funktion, welche ueberprueft
      * ob das Spiel zu Ende ist, die While-Schleife beendet.
      *
      * @param spielfeld		Anzahl von Aliens als Integer.
@@ -41,16 +42,17 @@ public class AlienGame {
             System.out.println(spielfeld);
             System.out.println(" Der Spieler hat noch " + spielfeld.getSpieler().getLeben() + "Hitpoints");
 
-            spielfeld.getSpieler().getBewegung().start(spielfeld);
+            spielfeld.getSpieler().getBewegung().start(spielfeld);      // Bewegung des Spielers
 
             System.out.println(spielfeld);
 
             int[] newKoord = scan(spielfeld);                           // Neue Koordinaten werden eingelesen
 
             angriffSpieler(spielfeld, newKoord);                        // Angriffszug des Spielers
+
             for (Alien alien: spielfeld.getAliens()) {
                 if (alien.getLeben() == 1) {
-                    alien.getBewegung().start(spielfeld);
+                    alien.getBewegung().start(spielfeld);               // Bewegung jedes Aliens
                 }
 
             }
@@ -73,7 +75,7 @@ public class AlienGame {
                 }
             }
         }
-        System.out.println(Arrays.deepToString(spielfeld.getSpieler().getZiel()));
+        //System.out.println(Arrays.deepToString(spielfeld.getSpieler().getZiel()));
     }
     /**
      * Die Funktion laesst jeden Alien den Spieler angreifen.
@@ -159,7 +161,7 @@ public class AlienGame {
         }
         Boolean checkAlien = false;
         for (Alien alien: spielfeld.getAliens()) {
-            if (alien.getLeben()== 0 && koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
+            if (alien.getLeben() == 0 && koord[0] == alien.getKoorX() && koord[1] == alien.getKoorY()) {
                 System.out.println("Koordinaten treffen einen toten Alien (" + koord[0] + "," + koord[1] + ")");
                 return false;
             }

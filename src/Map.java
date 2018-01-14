@@ -1,9 +1,9 @@
 import java.util.Arrays;
 
 /**
- * Diese Klasse erzeugt ein Spielfeld vom Typ char[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
- * Das Spielfeld wird mit Leerzeichen sowie P und A bestetzt und das entsprechende Objekt mit den passenden
- * Koordinaten erzeugt.
+ * Diese Klasse erzeugt ein Spielfeld vom Typ Character[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
+ * Es wird ein Player Objekt erzeugt und eine Liste von Aliens, dann gibt es eine Funktion welche das Character
+ * Array immer aktualiesiert mit den neuen Koordinaten der Character Objekte.
  * Die Klasse hat drei Klassenavariabeln: spielfeld, spieler und aliens.
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
@@ -14,9 +14,8 @@ public class Map {
     private Alien[] aliens;
     private int spielerTyp;
     /**
-     * Dann wird ein Spielfeld vom Type Char[][] erzeugt und mit Leerzeichen besetzt.
-     * Danach wird das Spielfeld zufaellig mit einen Spieler und einer gewissen Anzahl von Aliens besetzt.
-     * Wobei auch das Player-Objekt und die Liste von Alien-Objekte erzeugt werden.
+     * Dann wird ein Spielfeld vom Type Character[][] erzeugt.
+     * Danach wird diesen Array mit bestimmten Objekten befuellt.
      *
      * @param anzahlAliens		Anzahl von Aliens als Integer.
      * @param breite		    Breite des Spielfeld als Integer.
@@ -32,14 +31,13 @@ public class Map {
 
     }
     /**
-     * Die Funktion besetzt das, als Parameter uebergebene Spielfeld, zufällig mit Aliens und einem Spieler
-     * und erzeuge dementsprechend die Objekte. Zudem wird beim erzeugen des Spieler-Objektes noch der
-     * Spielertyp abgefragt und dieser spezielle erzeugt.
+     * Diese Funktion erzeugt zunaechst ein Spieler-Objekt und danach eine Liste von Aliens. Dann wird das
+     * Character Array mit diesen Objekten befuellt.
      *
      * @param anzahlAliens		Anzahl von Aliens als Integer.
      * @param breite		    Breite des Spielfeld als Integer.
      * @param laenge		    Laenge des Spielfeld als Integer.
-     * @return Ein Char[][] besetzt mit einer bestimmten Anzahl von Aliens und einem Spieler.
+     * @return Ein Character[][] besetzt mit einer bestimmten Anzahl von Aliens-Objekten und einem Spieler-Objekt.
      */
     public Character[][] besetzeSpielfeld(int anzahlAliens, int breite, int laenge) {
         this.spieler = erzeugeSpieler(breite, laenge);
@@ -47,13 +45,27 @@ public class Map {
         aktualisiereSpielfeld();
         return spielfeld;
     }
+    /**
+     * Diese Funktion aktualisiert das Character Array. Zunaechst wird alles mit null besetzt (resetet).
+     * Danach fuellen wir das Array mit den Spielern und den Aliens.
+     */
     public void aktualisiereSpielfeld() {
         this.spielfeld = besetzeLeerzeichen(spielfeld);
         this.spielfeld[spieler.getKoorY()][spieler.getKoorX()] = spieler;
-        for (Alien alien: aliens){
+        for (Alien alien: aliens) {
             this.spielfeld[alien.getKoorY()][alien.getKoorX()] = alien;
         }
     }
+    /**
+     * Diese Funktion erzeugt die Aliens. Es werden ein bestimmte Anzahl von Aliens erzeugt werden und dementsprechend
+     * viele unterschiedliche Koordinaten.
+     *
+     * @param spieler		    Spieler-Objekt
+     * @param breite		    Breite des Spielfeld als Integer.
+     * @param laenge		    Laenge des Spielfeld als Integer.
+     * @param anzahlAliens		Anzahl der Aliens
+     * @return Alien[] besetzt mit einer bestimmten Anzahl von Aliens-Objekten.
+     */
     public Alien[] erzeugeAlien(Player spieler, int breite, int laenge, int anzahlAliens) {
         Alien[]alienList = new Alien[anzahlAliens];
         int[][] koordi = new int[anzahlAliens][2];
@@ -67,24 +79,29 @@ public class Map {
 				sind, ansonsten erzeugt sie solange neue Koordinaten,
 				bis er einen leeren Platz findet.
 			 */
-
             int[] koor = new int[]{x, y};
             while (contain(koordi, koor) || Arrays.equals(spieler.getKoor(), koor)) {
                 x = (int) (Math.random() * laenge);
                 y = (int) (Math.random() * breite);
                 koor = new int[]{x, y};
-                System.out.println(Arrays.toString(koor)+ "  ");
             }
             koordi[i] = koor;
             Alien alien = new Alien(x, y);                      // Erzeuge Alien-Objekt
-            alien.setBewegung(breite, laenge);
+            alien.setBewegung(breite, laenge);                  // Bewegungs-Objekt wird im ALien implementiert
             alienList[i] = alien;
         }
         return alienList;
     }
+    /**
+     * Diese Funktion erzeugt das Spieler Objekt.
+     *
+     * @param breite		    Breite des Spielfeld als Integer.
+     * @param laenge		    Laenge des Spielfeld als Integer.
+     * @return Spieler-Objekt.
+     */
     public Player erzeugeSpieler(int breite, int laenge) {
         int xKoordSpieler = (int) (Math.random() * laenge);		// Erzeuge zufaellige x-Koordinate
-        int yKoordSpieler = (int) (Math.random() * breite);
+        int yKoordSpieler = (int) (Math.random() * breite);     // Erzeuge zufaellige y-Koordinate
         switch (spielerTyp) {                                   // Fragt den Spielertyp ab
             case 0:
                 spieler = new Artillerie(xKoordSpieler, yKoordSpieler);     // Erzeugt Artillerie Objekt
@@ -93,13 +110,13 @@ public class Map {
                 spieler = new Scharf(xKoordSpieler, yKoordSpieler);         // Erzeugt Scharfschuetzen Objekt
                 break;
             case 2:
-                spieler = new Laserstrahler(xKoordSpieler, yKoordSpieler);         // Erzeugt Scharfschuetzen Objekt
+                spieler = new Laserstrahler(xKoordSpieler, yKoordSpieler);  // Erzeugt Laserstrahl Objekt
                 break;
             default:
                 System.out.println("Fehler mit dem Spielertyp");
                 break;
         }
-        spieler.setBewegung(breite, laenge);
+        spieler.setBewegung(breite, laenge);                           // Bewegungs-Objekt wird im ALien implementiert
         return spieler;
     }
 
@@ -145,7 +162,7 @@ public class Map {
                             str.append("X");
                         }
                     }
-                }else {
+                } else {
                     str.append(" ");
                 }
             }
@@ -176,7 +193,13 @@ public class Map {
         }
         return spielfeld;
     }
-    public static boolean contain(int[][] arr, int [] item) {
+    /**
+     * Diese Funktion uberprueft ob ein int[] in einem int[][] enthalten ist.
+     * @param arr	 int[][]
+     * @param item	 int[]
+     * @return boolean   True wenn item in arr enthalten ist ansonsten false
+     */
+    public static boolean contain(int[][] arr, int[] item) {
         for (int[] n : arr) {
             if (Arrays.equals(item, n)) {
                 return true;

@@ -10,13 +10,15 @@ public class Character {
     private int koorY;
     private int[][] ziel;
     private int trefferWahrscheinlichkeit;
-    private Interface bewegung;
+    private Bewegung bewegung;
     private int bewegungsMax;
 
     /**
      * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
-     * @param x		x-Koordinate
-     * @param y		y-Koordinate
+     * @param x		        x-Koordinate
+     * @param y		        y-Koordinate
+     * @param leben		    Leben das Charakter
+     * @param bewegungsMax  Maximale Bewegungsschritte des Charakters
      */
     public Character(int x, int y, int leben, int bewegungsMax) {
         this.leben = leben;
@@ -101,30 +103,54 @@ public class Character {
     public void setLeben() {
         this.leben--;
     }
-
+    /**
+     * Zum Aendern der der X-Koordinate
+     * @param koorX   neue X-Koordinate
+     */
     public void setKoorX(int koorX) {
         this.koorX = koorX;
     }
-
+    /**
+     * Zum Aendern der der Y-Koordinate
+     * @param koorY   neue Y-Koordinate
+     */
     public void setKoorY(int koorY) {
         this.koorY = koorY;
     }
+    /**
+     * Abfrage der Koordinaten
+     * @return int[] der Koordinaten
+     */
     public int[] getKoor() {
-        return new int[] {koorX,koorY};
+        return new int[] {koorX, koorY};
     }
-
+    /**
+     * Erzeugt ein Bewegungs-Objekt welches sich um die Bewegung des Charakters kuemmert
+     * @param breite   Breite des Spielfeldes
+     * @param laenge   Laenge des Spielfeldes
+     */
     public void setBewegung(int breite, int laenge) {
-        this.bewegung = new Interface(this, breite, laenge);
+        this.bewegung = new Bewegung(this, breite, laenge);
     }
-
-    public Interface getBewegung() {
+    /**
+     * Abfrage des Bewegungs-Objektes.
+     * @return  Bewegung bewegung      das Bewegungs-Objekt
+     */
+    public Bewegung getBewegung() {
         return bewegung;
     }
-    public String scanMove(){
-        return null;
-    }
-
+    /**
+     * Abfrage der maximalen Bewegungsreichweite des Charakters
+     * @return  int bewegungsMax      die Bewegungsreichweite
+     */
     public int getBewegungsMax() {
         return bewegungsMax;
+    }
+    /**
+     * Abstrakte Methode
+     * @return  null
+     */
+    public String scanMove() {
+        return null;
     }
 }

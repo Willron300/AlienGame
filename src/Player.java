@@ -9,6 +9,8 @@ import java.util.Scanner;
 public class Player extends Character {
     /**
      * Beim erzeugen des Player-Objektes werden die Klassenvariabeln neu definiert.
+     * Zudem wird das Character Objekt erzeugt mit den passenden Varaiabeln.
+     * Danach werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
@@ -20,6 +22,11 @@ public class Player extends Character {
         setZiel(ziel);
     }
 
+    /**
+     * Diese Funktion ist zustaendig für den String der Bewegung des Players. Mithilfe des Scanner Objektes,
+     * kann der Benutzer einen String eingeben.
+     * @return String       der angegebene String
+     */
     @Override
     public String scanMove() {
         System.out.print("Wohin soll der Spieler gehen : ");
@@ -36,7 +43,8 @@ public class Player extends Character {
      */
 
     public void angriff(Alien alien, Map spielfeld) {
-        int wahrscheinlichkeit = (int) (100.0 - (getTrefferWahrscheinlichkeit() * (1.0 - (1.0 / distance(alien.getKoorX(), alien.getKoorY())))));
+        int wahrscheinlichkeit = (int) (100.0 - (getTrefferWahrscheinlichkeit()
+                * (1.0 - (1.0 / distance(alien.getKoorX(), alien.getKoorY())))));
         int zufall = (int) (Math.random() * 100);
 
         if (wahrscheinlichkeit > zufall) {

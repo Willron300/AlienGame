@@ -7,7 +7,7 @@
  */
 public class Artillerie extends Player {
     /**
-     * Beim erzeugen des Alien-Objektes werden die Klassenvariabeln neu definiert.
+     * Beim erzeugen des Artillerie-Objektes werden die Klassenvariabeln neu definiert.
      * Zudem werden die Trefferwahrscheinlichkeit und die Zielkoordinaten definiert.
      * @param x		x-Koordinate
      * @param y		y-Koordinate
