@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Diese Klasse erzeugt ein Spielfeld vom Typ Character[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
@@ -29,6 +32,94 @@ public class Map {
 
         this.spielfeld = besetzeSpielfeld(anzahlAliens, breite, laenge);
 
+    }
+    public AlienGameObject[][] generateMatchfield(int breite, int laenge) {
+        AlienGameObject[][] irrgarten = new AlienGameObject[breite][laenge];
+        irrgarten = besetzeWall(irrgarten);
+        int x = (int) (Math.random() * laenge);
+        int y = (int) (Math.random() * breite);
+        workIrrgarten(x, y, irrgarten);
+        return irrgarten;
+    }
+    public static void kack(AlienGameObject[][] spielfeld) {
+        for (int i = 0; i < spielfeld.length; i++ ) {                   // Jede Zeile wird abgearbeitet
+            for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
+                if (spielfeld[i][j] instanceof Wall) {
+                    System.out.print(spielfeld[i][j]);
+                }else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println("");
+        }
+
+    }
+    public void workIrrgarten(int x, int y, AlienGameObject[][] irrgarten) {
+        kack(irrgarten);
+        if (irrgarten[y][x] instanceof Wall) {
+            Wall wall = (Wall) irrgarten[y][x];
+            if (!wall.getMark()) {
+
+                wall.setMark(true);
+                try {
+                    if (irrgarten[y-1][x] instanceof Wall && !(((Wall) irrgarten[y-1][x]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y-1][x]);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e){
+                    ;
+                }
+                try {
+                    if (irrgarten[y+1][x] instanceof Wall && !(((Wall) irrgarten[y+1][x]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y+1][x]);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e){
+                    ;
+                }
+                try {
+                    if (irrgarten[y][x-1] instanceof Wall && !(((Wall) irrgarten[y][x-1]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y][x-1]);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e){
+                    ;
+                }
+                try {
+                    if (irrgarten[y][x+1] instanceof Wall && !(((Wall) irrgarten[y][x+1]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y][x+1]);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e){
+                    ;
+                }
+
+
+                while(wall.checkList()) {
+                    System.out.println(wall.getList());
+                    int rnd = new Random().nextInt(wall.getList().size());
+
+                    Wall nextWall = wall.getList().get(rnd);
+                    if (!nextWall.getMark()) {
+                        irrgarten[y][x] = null;
+                        workIrrgarten(nextWall.getKoorX(), nextWall.getKoorY(), irrgarten);
+                    }
+                }
+            }
+
+
+        }
+
+    }
+    /**
+     * Diese Funktion erhaelt ein Spielfeld und besetzt es mit Leerzeichen.
+     * @param irrgarten	 Ein Spielfeld von Type Char[][].
+     * @return Ein Char[][] besetzt mit Leerzeichen.
+     */
+    public static AlienGameObject[][] besetzeWall(AlienGameObject[][] irrgarten) {
+        for (int i = 0; i < irrgarten.length; i++) {
+            for (int j = 0; j < irrgarten[i].length; j++) {
+                Wall wall = new Wall(j,i);
+                irrgarten[i][j] = wall;
+            }
+        }
+        return irrgarten;
     }
     /**
      * Diese Funktion erzeugt zunaechst ein Spieler-Objekt und danach eine Liste von Aliens. Dann wird das

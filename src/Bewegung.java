@@ -185,7 +185,6 @@ public class Bewegung implements Moveable {
                 default:
                     return false;
             }
-            return true;
         }
         return true;
     }

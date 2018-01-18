@@ -4,10 +4,8 @@
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
-public class Character {
+public class Character extends AlienGameObject {
     private int leben;
-    private int koorX;
-    private int koorY;
     private int[][] ziel;
     private int trefferWahrscheinlichkeit;
     private Bewegung bewegung;
@@ -21,9 +19,8 @@ public class Character {
      * @param bewegungsMax  Maximale Bewegungsschritte des Charakters
      */
     public Character(int x, int y, int leben, int bewegungsMax) {
+        super(x, y);
         this.leben = leben;
-        this.koorX = x;
-        this.koorY = y;
         this.bewegungsMax = bewegungsMax;
     }
 
@@ -68,29 +65,6 @@ public class Character {
         this.trefferWahrscheinlichkeit = trefferWahrscheinlichkeit;
     }
     /**
-     * Abfrage der X-Koordinate.
-     * @return Integer der X-Koordinate.
-     */
-    public int getKoorX() {
-        return koorX;
-    }
-    /**
-     * Abfrage der Y-Koordinate.
-     * @return Integer der Y-Koordinate.
-     */
-    public int getKoorY() {
-        return koorY;
-    }
-    /**
-     * Die Funktion ueberschreibt die toString Methode und erzeugt ein String mit den Koordinaten.
-     * return str       Die Koordinaten des Spielers als String
-     */
-    @Override
-    public String toString() {
-        String str = "(" + koorX + "," + koorY + ")";
-        return str;
-    }
-    /**
      * Abfrage der Lebenstatus-Variable.
      * @return Integer des Lebenstatus.
      */
@@ -103,27 +77,7 @@ public class Character {
     public void setLeben() {
         this.leben--;
     }
-    /**
-     * Zum Aendern der der X-Koordinate
-     * @param koorX   neue X-Koordinate
-     */
-    public void setKoorX(int koorX) {
-        this.koorX = koorX;
-    }
-    /**
-     * Zum Aendern der der Y-Koordinate
-     * @param koorY   neue Y-Koordinate
-     */
-    public void setKoorY(int koorY) {
-        this.koorY = koorY;
-    }
-    /**
-     * Abfrage der Koordinaten
-     * @return int[] der Koordinaten
-     */
-    public int[] getKoor() {
-        return new int[] {koorX, koorY};
-    }
+
     /**
      * Erzeugt ein Bewegungs-Objekt welches sich um die Bewegung des Charakters kuemmert
      * @param breite   Breite des Spielfeldes
