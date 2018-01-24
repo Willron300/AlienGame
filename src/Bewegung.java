@@ -51,23 +51,46 @@ public class Bewegung implements Moveable {
         char[] bewegungListe = bewegungString.toCharArray();
         int neuKoorX = character.getKoorX();
         int neuKoorY = character.getKoorY();
+        char schritt = 'o';
         for (char bewegungChar: bewegungListe) {
             switch (bewegungChar) {
                 case 'a':
                     neuKoorX--;
+                    schritt = 'a';
                     break;
                 case 'w':
                     neuKoorY--;
+                    schritt = 'w';
                     break;
                 case 's':
                     neuKoorY++;
+                    schritt = 's';
                     break;
                 case 'd':
                     neuKoorX++;
-
+                    schritt = 'd';
                     break;
                 default:
                     break;
+            }
+            if (spielfeld.getSpielfeld()[neuKoorY][neuKoorX] instanceof Wall) {
+                if (((Wall) spielfeld.getSpielfeld()[neuKoorY][neuKoorX]).getType() == 0) {
+                    switch (schritt) {
+                        case 'a':
+                            int sht;
+                            neuKoorX--;
+                            break;
+                        case 'w':
+                            neuKoorY--;
+                            break;
+                        case 's':
+                            neuKoorY++;
+                            break;
+                        case 'd':
+                            neuKoorX++;
+                            break;
+                    }
+                }
             }
         }
         if (character instanceof Player) {
@@ -107,21 +130,45 @@ public class Bewegung implements Moveable {
     public  Boolean checkOrientierung(char[] bewegungListe, Map spielfeld) {
         int neuKoorX = character.getKoorX();
         int neuKoorY = character.getKoorY();
-
+        char schritt = 'o';
         for (char bewegungChar: bewegungListe) {
             switch (bewegungChar) {
                 case 'a':
                     neuKoorX--;
+                    schritt = 'a';
                     break;
                 case 'w':
                     neuKoorY--;
+                    schritt = 'w';
                     break;
                 case 's':
                     neuKoorY++;
+                    schritt = 's';
                     break;
                 case 'd':
                     neuKoorX++;
+                    schritt = 'd';
                     break;
+            }
+            if (spielfeld.getSpielfeld()[neuKoorY][neuKoorX] instanceof Wall) {
+                if (((Wall) spielfeld.getSpielfeld()[neuKoorY][neuKoorX]).getType() == 1) {
+                    return false;
+                } else {
+                    switch (schritt) {
+                        case 'a':
+                            neuKoorX--;
+                            break;
+                        case 'w':
+                            neuKoorY--;
+                            break;
+                        case 's':
+                            neuKoorY++;
+                            break;
+                        case 'd':
+                            neuKoorX++;
+                            break;
+                    }
+                }
             }
         }
 
@@ -132,8 +179,13 @@ public class Bewegung implements Moveable {
             return false;
         }
         if (spielfeld.getSpielfeld()[neuKoorY][neuKoorX] != null) {
+
             if (character instanceof Player) {
-                System.out.println("Der Platz ist bereits besetzt");
+                if (spielfeld.getSpielfeld()[neuKoorY][neuKoorX] instanceof Player || bewegungListe[0] == 'o') {
+                    return true;
+                } else {
+                    System.out.println("Der Platz ist bereits besetzt");
+                }
             }
             return false;
         }
@@ -172,18 +224,23 @@ public class Bewegung implements Moveable {
         if (bewegungListe.length > character.getBewegungsMax()) {
             return false;
         }
-        for (char bewegungChar: bewegungListe) {
-            switch (bewegungChar) {
-                case 'a':
-                    break;
-                case 'w':
-                    break;
-                case 's':
-                    break;
-                case 'd':
-                    break;
-                default:
-                    return false;
+        if (bewegungListe[0] == 'o' && bewegungListe.length == 1) {
+            return true;
+        } else {
+            for (char bewegungChar: bewegungListe) {
+                switch (bewegungChar) {
+                    case 'a':
+                        break;
+                    case 'w':
+                        break;
+                    case 's':
+                        break;
+                    case 'd':
+                        break;
+                    default:
+                        return false;
+                }
+
             }
         }
         return true;

@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Diese Klasse erzeugt ein Spielfeld vom Typ Character[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
@@ -12,7 +9,8 @@ import java.util.Random;
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public class Map {
-    private Character[][] spielfeld;
+    private AlienGameObject[][] irrgarten;
+    private AlienGameObject[][] spielfeld;
     private Player spieler;
     private Alien[] aliens;
     private int spielerTyp;
@@ -26,11 +24,43 @@ public class Map {
      * @param spielerTyp	    Spielertyp des Spielers als Integer.
      */
     public Map(int breite, int laenge, int anzahlAliens, int spielerTyp) {
+        this.irrgarten = generateMatchfield(breite, laenge);
+
+        while (checkFreiSpielfeld(irrgarten) <= 2) {
+            this.irrgarten = generateMatchfield(breite, laenge);
+        }
+        while (anzahlAliens + 1 > checkFreiSpielfeld(irrgarten)) {
+            this.spielfeld = irrgarten;
+            System.out.println(toString());
+            Scanner scanner = new Scanner(System.in);               // Scanner-Modul
+            System.out.print("Die Anzahl der Aliens passt nicht aufs Spielfeld. \n Bitte eine neue Anzahl angeben : ");
+            try {
+                anzahlAliens = scanner.nextInt();
+            } catch (InputMismatchException e) {                           // falls ein String im Terminal angegeben
+                System.out.printf("Fehler bei der Eingabe. Bitte gebe einen korrekten Integer " +
+                        "Wert ein, welcher kleiner ist als %d", checkFreiSpielfeld(getSpielfeld()) - 1);
+                anzahlAliens = 1000000000;
+            }
+            this.spielfeld = new AlienGameObject[irrgarten.length][];
+
+        }
         this.aliens = new Alien[anzahlAliens];
-        this.spielfeld = new Character[breite][laenge];
         this.spielerTyp = spielerTyp;
 
         this.spielfeld = besetzeSpielfeld(anzahlAliens, breite, laenge);
+
+    }
+    public int checkFreiSpielfeld(AlienGameObject[][] spielfeld) {
+        int countFrei = 0;
+        for (int i = 0; i < spielfeld.length; i++ ) {
+            for (int j = 0; j < spielfeld[i].length; j++) {
+                if (!(spielfeld[i][j] instanceof Wall)) {
+                    countFrei++;
+                }
+            }
+        }
+
+        return countFrei;
 
     }
     public AlienGameObject[][] generateMatchfield(int breite, int laenge) {
@@ -55,7 +85,7 @@ public class Map {
 
     }
     public void workIrrgarten(int x, int y, AlienGameObject[][] irrgarten) {
-        kack(irrgarten);
+        //kack(irrgarten);
         if (irrgarten[y][x] instanceof Wall) {
             Wall wall = (Wall) irrgarten[y][x];
             if (!wall.getMark()) {
@@ -91,11 +121,11 @@ public class Map {
                 }
 
 
-                while(wall.checkList()) {
-                    System.out.println(wall.getList());
-                    int rnd = new Random().nextInt(wall.getList().size());
+                while(!wall.getList().isEmpty()) {
+                    //System.out.println(wall.getList());
 
-                    Wall nextWall = wall.getList().get(rnd);
+                    Wall nextWall = wall.getnneighourWall();
+
                     if (!nextWall.getMark()) {
                         irrgarten[y][x] = null;
                         workIrrgarten(nextWall.getKoorX(), nextWall.getKoorY(), irrgarten);
@@ -130,7 +160,7 @@ public class Map {
      * @param laenge		    Laenge des Spielfeld als Integer.
      * @return Ein Character[][] besetzt mit einer bestimmten Anzahl von Aliens-Objekten und einem Spieler-Objekt.
      */
-    public Character[][] besetzeSpielfeld(int anzahlAliens, int breite, int laenge) {
+    public AlienGameObject[][] besetzeSpielfeld(int anzahlAliens, int breite, int laenge) {
         this.spieler = erzeugeSpieler(breite, laenge);
         this.aliens = erzeugeAlien(spieler, breite, laenge, anzahlAliens);
         aktualisiereSpielfeld();
@@ -141,7 +171,10 @@ public class Map {
      * Danach fuellen wir das Array mit den Spielern und den Aliens.
      */
     public void aktualisiereSpielfeld() {
-        this.spielfeld = besetzeLeerzeichen(spielfeld);
+        spielfeld = new AlienGameObject[irrgarten.length][];
+        for(int i = 0; i < irrgarten.length; i++)
+            spielfeld[i] = irrgarten[i].clone();
+
         this.spielfeld[spieler.getKoorY()][spieler.getKoorX()] = spieler;
         for (Alien alien: aliens) {
             this.spielfeld[alien.getKoorY()][alien.getKoorX()] = alien;
@@ -171,7 +204,7 @@ public class Map {
 				bis er einen leeren Platz findet.
 			 */
             int[] koor = new int[]{x, y};
-            while (contain(koordi, koor) || Arrays.equals(spieler.getKoor(), koor)) {
+            while (contain(koordi, koor) || Arrays.equals(spieler.getKoor(), koor) || irrgarten[y][x] instanceof Wall) {
                 x = (int) (Math.random() * laenge);
                 y = (int) (Math.random() * breite);
                 koor = new int[]{x, y};
@@ -191,8 +224,14 @@ public class Map {
      * @return Spieler-Objekt.
      */
     public Player erzeugeSpieler(int breite, int laenge) {
+
         int xKoordSpieler = (int) (Math.random() * laenge);		// Erzeuge zufaellige x-Koordinate
         int yKoordSpieler = (int) (Math.random() * breite);     // Erzeuge zufaellige y-Koordinate
+
+        while (irrgarten[yKoordSpieler][xKoordSpieler] instanceof Wall) {
+            xKoordSpieler = (int) (Math.random() * laenge);		// Erzeuge zufaellige x-Koordinate
+            yKoordSpieler = (int) (Math.random() * breite);     // Erzeuge zufaellige y-Koordinate
+        }
         switch (spielerTyp) {                                   // Fragt den Spielertyp ab
             case 0:
                 spieler = new Artillerie(xKoordSpieler, yKoordSpieler);     // Erzeugt Artillerie Objekt
@@ -242,15 +281,20 @@ public class Map {
             }
             str.append(i % 10 + "*");                                   // Fuege den Einzer-Zahl hinzu
             for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
-                if (spielfeld[i][j] instanceof Character) {
-                    if (spielfeld[i][j] instanceof Player) {
-                        str.append("P");
+                if (spielfeld[i][j] instanceof AlienGameObject){
+                    if (spielfeld[i][j] instanceof Wall) {
+                        str.append(spielfeld[i][j].toString());
                     }
-                    if (spielfeld[i][j] instanceof Alien) {
-                        if (spielfeld[i][j].getLeben() == 1) {
-                            str.append("A");
-                        } else {
-                            str.append("X");
+                    if (spielfeld[i][j] instanceof Character) {
+                        if (spielfeld[i][j] instanceof Player) {
+                            str.append("P");
+                        }
+                        if (spielfeld[i][j] instanceof Alien) {
+                            if (((Alien) spielfeld[i][j]).getLeben() == 1) {
+                                str.append("A");
+                            } else {
+                                str.append("X");
+                            }
                         }
                     }
                 } else {
@@ -271,19 +315,7 @@ public class Map {
     public static String repeat(int count, String with) {
         return new String(new char[count]).replace("\0", with);
     }
-    /**
-     * Diese Funktion erhaelt ein Spielfeld und besetzt es mit Leerzeichen.
-     * @param spielfeld	 Ein Spielfeld von Type Char[][].
-     * @return Ein Char[][] besetzt mit Leerzeichen.
-     */
-    public static Character[][] besetzeLeerzeichen(Character[][] spielfeld) {
-        for (int i = 0; i < spielfeld.length; i++) {
-            for (int j = 0; j < spielfeld[i].length; j++) {
-                spielfeld[i][j] = null;
-            }
-        }
-        return spielfeld;
-    }
+
     /**
      * Diese Funktion uberprueft ob ein int[] in einem int[][] enthalten ist.
      * @param arr	 int[][]
@@ -330,7 +362,7 @@ public class Map {
      * Abfrage der Spielfeld-Variable.
      * @return  Das Spielfeld vom Typ char[][].
      */
-    public Character[][] getSpielfeld() {
+    public AlienGameObject[][] getSpielfeld() {
         return spielfeld;
     }
     /**
@@ -341,5 +373,13 @@ public class Map {
      */
     public void setSpielfeld(Character charakter, int x, int y) {
         this.spielfeld[x][y] = charakter;
+    }
+
+    public void setIrrgarten(AlienGameObject[][] irrgarten) {
+        this.irrgarten = irrgarten;
+    }
+
+    public AlienGameObject[][] getIrrgarten() {
+        return irrgarten;
     }
 }

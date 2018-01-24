@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Wall extends AlienGameObject {
     private int type;
@@ -14,13 +15,11 @@ public class Wall extends AlienGameObject {
             this.type = 0;
         }
     }
-    public boolean checkList() {
-        for (int i = 0; i<list.size(); i++) {
-            if(!list.get(i).getMark()) {
-                return true;
-            }
-        }
-        return false;
+    public Wall getnneighourWall() {
+        int rnd = new Random().nextInt(list.size());
+        Wall nextWall = list.get(rnd);
+        list.remove(rnd);
+        return nextWall;
     }
 
     @Override
@@ -40,6 +39,11 @@ public class Wall extends AlienGameObject {
     }
     public void setList(Wall wall) {
         this.list.add(wall);
+        int random = (int)(Math.random() * 100);
+        if (random < 20) {
+            wall.setMark(true);
+        }
+
     }
 
     public List<Wall> getList() {

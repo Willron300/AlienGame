@@ -6,21 +6,16 @@ public class test {
     public static void main(String[] args) {
         Map spielfeld = new Map(10, 10, 5, 1);
 
-        AlienGameObject[][] bla = spielfeld.generateMatchfield(10, 10 );
-        kack(bla);
+        int[][] a = new int[][]{{1,2,3,4,5}};
+        int[][] b = new int[a.length][];
+        for(int i = 0; i < a.length; i++)
+            b[i] = a[i].clone();
+
+        b[0][1] = 132;
+
+        System.out.println(Arrays.deepToString(a));
+        System.out.println(Arrays.deepToString(b));
 
     }
-    public static void kack(AlienGameObject[][] spielfeld) {
-        for (int i = 0; i < spielfeld.length; i++ ) {                   // Jede Zeile wird abgearbeitet
-            for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
-                if (spielfeld[i][j] instanceof Wall) {
-                    System.out.print(spielfeld[i][j]);
-                }else {
-                    System.out.print(" ");
-                }
-            }
-            System.out.println("");
-        }
 
-    }
 }
