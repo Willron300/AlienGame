@@ -1,6 +1,6 @@
 /**
- * Diese Klasse ist die Grundklasse von der Alien und Player-Klasse. Sie enthaelt x und y-Koordinaten und die
- * distance-Funktion.
+ * Diese Klasse ist die Grundklasse von der Alien und Player-Klasse. Sie vererbt aus der ALienGameObjekt-Klasse.
+ * Sie enthaelt das Leben die Zielkoordinaten und die Trefferwahrscheinlichkeit, zudem die distance-Funktion.
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */

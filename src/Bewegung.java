@@ -150,6 +150,14 @@ public class Bewegung implements Moveable {
                     schritt = 'd';
                     break;
             }
+            if (neuKoorX < 0 || neuKoorY < 0 || neuKoorX > spielfeldGrosse[0] - 1
+                    || neuKoorY > spielfeldGrosse[1] - 1) {
+                return false;
+            }
+            /**
+             * Falls ein Wall-Objekt eine Tuer ist, und es durchschritten wurde dann wird ein zusaetzlicher Schritt
+             * in diese Richtung gegangen.
+             */
             if (spielfeld.getSpielfeld()[neuKoorY][neuKoorX] instanceof Wall) {
                 if (((Wall) spielfeld.getSpielfeld()[neuKoorY][neuKoorX]).getType() == 1) {
                     return false;
@@ -224,21 +232,25 @@ public class Bewegung implements Moveable {
         if (bewegungListe.length > character.getBewegungsMax()) {
             return false;
         }
-        if (bewegungListe[0] == 'o' && bewegungListe.length == 1) {
-            return true;
-        } else {
-            for (char bewegungChar: bewegungListe) {
-                switch (bewegungChar) {
-                    case 'a':
-                        break;
-                    case 'w':
-                        break;
-                    case 's':
-                        break;
-                    case 'd':
-                        break;
-                    default:
-                        return false;
+
+        if (bewegungListe.length >= 1) {
+            if (bewegungListe[0] == 'o') {
+                return true;
+            } else {
+                for (char bewegungChar: bewegungListe) {
+                    switch (bewegungChar) {
+                        case 'a':
+                            break;
+                        case 'w':
+                            break;
+                        case 's':
+                            break;
+                        case 'd':
+                            break;
+                        default:
+                            return false;
+                    }
+
                 }
 
             }

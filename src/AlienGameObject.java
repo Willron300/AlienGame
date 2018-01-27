@@ -1,7 +1,16 @@
+/**
+ * Diese Klasse ist die Grundklasse von AlienGame-Objekten. Sie enthaelt die X- und Y- Koordinaten.
+ * @author Willi Schueler 4302326 Gruppe 3B
+ * @author Tim Hunte 4919764 Gruppe 3B
+ */
 public class AlienGameObject {
     private int koorX;
     private int koorY;
-
+    /**
+     * Beim erzeugen des AlienGameObject-Objektes werden die Klassenvariabeln neu definiert.
+     * @param x		        x-Koordinate
+     * @param y		        y-Koordinate
+     */
     public AlienGameObject(int x, int y) {
         this.koorX = x;
         this.koorY = y;

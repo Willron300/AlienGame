@@ -1,7 +1,8 @@
 import java.util.*;
 
 /**
- * Diese Klasse erzeugt ein Spielfeld vom Typ Character[][] und ein Player-Objekt und eine Liste von Alien-Objekten.
+ * Diese Klasse erzeugt einen Irrgarten vom Typ AlienGameObject[][]. Dieses wird dann durch eine rekrusive Methode
+ * zufaellig mit Wall-Objekten besetzt. Danach wird ein Player-Objekt und eine Liste von Alien-Objekten generiert.
  * Es wird ein Player Objekt erzeugt und eine Liste von Aliens, dann gibt es eine Funktion welche das Character
  * Array immer aktualiesiert mit den neuen Koordinaten der Character Objekte.
  * Die Klasse hat drei Klassenavariabeln: spielfeld, spieler und aliens.
@@ -15,7 +16,7 @@ public class Map {
     private Alien[] aliens;
     private int spielerTyp;
     /**
-     * Dann wird ein Spielfeld vom Type Character[][] erzeugt.
+     * Dann wird ein Spielfeld vom Type AlienGameObjects[][] erzeugt.
      * Danach wird diesen Array mit bestimmten Objekten befuellt.
      *
      * @param anzahlAliens		Anzahl von Aliens als Integer.
@@ -27,7 +28,7 @@ public class Map {
         this.irrgarten = generateMatchfield(breite, laenge);
 
         while (checkFreiSpielfeld(irrgarten) <= 2) {
-            this.irrgarten = generateMatchfield(breite, laenge);
+            this.irrgarten = generateMatchfield(breite, laenge);        //erzeuge Irrgaten bis mindestens 2 Plaetze frei
         }
         while (anzahlAliens + 1 > checkFreiSpielfeld(irrgarten)) {
             this.spielfeld = irrgarten;
@@ -37,8 +38,8 @@ public class Map {
             try {
                 anzahlAliens = scanner.nextInt();
             } catch (InputMismatchException e) {                           // falls ein String im Terminal angegeben
-                System.out.printf("Fehler bei der Eingabe. Bitte gebe einen korrekten Integer " +
-                        "Wert ein, welcher kleiner ist als %d", checkFreiSpielfeld(getSpielfeld()) - 1);
+                System.out.printf("Fehler bei der Eingabe. Bitte gebe einen korrekten Integer "
+                        + "Wert ein, welcher kleiner ist als %d", checkFreiSpielfeld(getSpielfeld()) - 1);
                 anzahlAliens = 1000000000;
             }
             this.spielfeld = new AlienGameObject[irrgarten.length][];
@@ -50,6 +51,12 @@ public class Map {
         this.spielfeld = besetzeSpielfeld(anzahlAliens, breite, laenge);
 
     }
+    /**
+     * Ueberprueft die Anzahl von freien Plaetzen im Spielfeld Array.
+     *
+     * @param spielfeld		AlienGameObjects[][] der Irrgarten
+     * @return int Anzahl von freien Stellen des Spielfeldes
+     */
     public int checkFreiSpielfeld(AlienGameObject[][] spielfeld) {
         int countFrei = 0;
         for (int i = 0; i < spielfeld.length; i++ ) {
@@ -63,6 +70,14 @@ public class Map {
         return countFrei;
 
     }
+    /**
+     * Erzeugt ein AlienGameObejcts Array. Besetzt es zunaechst mit alles mit Wall-Objekten und loescht dann rekrusiv
+     * ein gewissen Anteil heraus.
+     *
+     * @param breite		Breite des Spielfeldes
+     * @param laenge		Laenge des Spielfeldes
+     * @return AlienGameObjects[][] der fertige Irrgarten
+     */
     public AlienGameObject[][] generateMatchfield(int breite, int laenge) {
         AlienGameObject[][] irrgarten = new AlienGameObject[breite][laenge];
         irrgarten = besetzeWall(irrgarten);
@@ -71,12 +86,17 @@ public class Map {
         workIrrgarten(x, y, irrgarten);
         return irrgarten;
     }
+    /**
+     * Kontrollfunktion zum Betrachten des Irrgartens.
+     *
+     * @param spielfeld		der Irrgarten
+     */
     public static void kack(AlienGameObject[][] spielfeld) {
         for (int i = 0; i < spielfeld.length; i++ ) {                   // Jede Zeile wird abgearbeitet
             for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
                 if (spielfeld[i][j] instanceof Wall) {
                     System.out.print(spielfeld[i][j]);
-                }else {
+                } else {
                     System.out.print(" ");
                 }
             }
@@ -84,6 +104,15 @@ public class Map {
         }
 
     }
+    /**
+     * Zuerst werden alle Nacharn des Wall-Objektes betrachtet und in die Klassenvariable list vom Wall eingefuegt.
+     * Dann wird ein zufaelliger Nachbar ausgesucht und das Wall-Objekt entfernt, falls der Nachbar noch nicht
+     * abgearbeitet wurde. Und die Methode ruft sich rekrusiv selbst neu auf mit den Koordinaten des Nachbarn.
+     *
+     * @param x		        X-Koordinate des Abzuarbeiten Objektes
+     * @param y		        Y-Koordinate des Abzuarbeiten Objektes
+     * @param irrgarten		Irrgarten vom Type AlienGameObjects[][]
+     */
     public void workIrrgarten(int x, int y, AlienGameObject[][] irrgarten) {
         //kack(irrgarten);
         if (irrgarten[y][x] instanceof Wall) {
@@ -92,36 +121,36 @@ public class Map {
 
                 wall.setMark(true);
                 try {
-                    if (irrgarten[y-1][x] instanceof Wall && !(((Wall) irrgarten[y-1][x]).getMark())) {
-                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y-1][x]);
+                    if (irrgarten[y - 1][x] instanceof Wall && !(((Wall) irrgarten[y - 1][x]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y - 1][x]);
                     }
-                } catch (ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     ;
                 }
                 try {
-                    if (irrgarten[y+1][x] instanceof Wall && !(((Wall) irrgarten[y+1][x]).getMark())) {
-                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y+1][x]);
+                    if (irrgarten[y + 1][x] instanceof Wall && !(((Wall) irrgarten[y + 1][x]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y + 1][x]);
                     }
-                } catch (ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     ;
                 }
                 try {
-                    if (irrgarten[y][x-1] instanceof Wall && !(((Wall) irrgarten[y][x-1]).getMark())) {
-                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y][x-1]);
+                    if (irrgarten[y][x - 1] instanceof Wall && !(((Wall) irrgarten[y][x - 1]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y][x - 1]);
                     }
-                } catch (ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     ;
                 }
                 try {
-                    if (irrgarten[y][x+1] instanceof Wall && !(((Wall) irrgarten[y][x+1]).getMark())) {
-                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y][x+1]);
+                    if (irrgarten[y][x + 1] instanceof Wall && !(((Wall) irrgarten[y][x + 1]).getMark())) {
+                        ((Wall) irrgarten[y][x]).setList((Wall) irrgarten[y][x + 1]);
                     }
-                } catch (ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     ;
                 }
 
 
-                while(!wall.getList().isEmpty()) {
+                while (!wall.getList().isEmpty()) {
                     //System.out.println(wall.getList());
 
                     Wall nextWall = wall.getnneighourWall();
@@ -138,14 +167,14 @@ public class Map {
 
     }
     /**
-     * Diese Funktion erhaelt ein Spielfeld und besetzt es mit Leerzeichen.
-     * @param irrgarten	 Ein Spielfeld von Type Char[][].
-     * @return Ein Char[][] besetzt mit Leerzeichen.
+     * Diese Funktion erhaelt den Irrgarten und besetzt es mit Wall-Objekten.
+     * @param irrgarten	 Ein Spielfeld von Type AlienGameObject[][].
+     * @return Ein AlienGameObject[][] besetzt mit Wall-Objekten.
      */
     public static AlienGameObject[][] besetzeWall(AlienGameObject[][] irrgarten) {
         for (int i = 0; i < irrgarten.length; i++) {
             for (int j = 0; j < irrgarten[i].length; j++) {
-                Wall wall = new Wall(j,i);
+                Wall wall = new Wall(j, i);
                 irrgarten[i][j] = wall;
             }
         }
@@ -172,8 +201,9 @@ public class Map {
      */
     public void aktualisiereSpielfeld() {
         spielfeld = new AlienGameObject[irrgarten.length][];
-        for(int i = 0; i < irrgarten.length; i++)
+        for (int i = 0; i < irrgarten.length; i++) {
             spielfeld[i] = irrgarten[i].clone();
+        }
 
         this.spielfeld[spieler.getKoorY()][spieler.getKoorX()] = spieler;
         for (Alien alien: aliens) {
@@ -281,7 +311,7 @@ public class Map {
             }
             str.append(i % 10 + "*");                                   // Fuege den Einzer-Zahl hinzu
             for (int j = 0; j < spielfeld[i].length; j++) {            // Jede Spalte wird abgearbeitet
-                if (spielfeld[i][j] instanceof AlienGameObject){
+                if (spielfeld[i][j] instanceof AlienGameObject) {
                     if (spielfeld[i][j] instanceof Wall) {
                         str.append(spielfeld[i][j].toString());
                     }

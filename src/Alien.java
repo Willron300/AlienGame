@@ -30,7 +30,8 @@ public class Alien extends Character {
         StringBuilder moveString = new StringBuilder("");
         char[] richtungen = new char[] {'a', 's', 'd', 'w'};
 
-        int schritte = (int) (Math.random() * (getBewegungsMax() + 1));
+        int schritte = (int) (Math.random() * (getBewegungsMax()));
+
         for (int i = 0; i < schritte; i++) {
             int rnd = new Random().nextInt(richtungen.length);
             moveString.append(richtungen[rnd]);
