@@ -114,7 +114,7 @@ public class Map {
      * @param irrgarten		Irrgarten vom Type AlienGameObjects[][]
      */
     public void workIrrgarten(int x, int y, AlienGameObject[][] irrgarten) {
-        //kack(irrgarten);
+        kack(irrgarten);
         if (irrgarten[y][x] instanceof Wall) {
             Wall wall = (Wall) irrgarten[y][x];
             if (!wall.getMark()) {

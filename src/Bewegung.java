@@ -134,9 +134,9 @@ public class Bewegung implements Moveable {
         for (char bewegungChar: bewegungListe) {
             switch (bewegungChar) {
                 case 'a':
-                    neuKoorX--;
-                    schritt = 'a';
-                    break;
+                neuKoorX--;
+                schritt = 'a';
+                break;
                 case 'w':
                     neuKoorY--;
                     schritt = 'w';

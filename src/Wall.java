@@ -72,7 +72,6 @@ public class Wall extends AlienGameObject {
         if (random < 20) {
             wall.setMark(true);
         }
-
     }
     /**
      * Abfrage des Liste von Nachbar-Wall-Objekten.
