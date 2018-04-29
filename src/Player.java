@@ -2,7 +2,8 @@ import java.util.Scanner;
 
 /**
  * Diese Klasse erzeugt ein Player Objekt. Sie vererbt aus der Character-Klasse.
- * Die Klasse hat drei Klassenvariabeln. Die X- und Y-Koordinate sowie ein Integer fur den Lebenspunkte.
+ * Die Klasse hat vier Klassenvariabeln. Die X- und Y-Koordinate sowie ein Integer fur den Lebenspunkte.
+ * Zudem ein Itemliste vom Typ MyList.
  * @author Willi Schueler 4302326 Gruppe 3B
  * @author Tim Hunte 4919764 Gruppe 3B
  */
@@ -14,6 +15,8 @@ public class Player extends Character {
      * @param x		x-Koordinate
      * @param y		y-Koordinate
      */
+    private MyList itemListe = new MyList();
+
     public Player(int x, int y) {
         super(x, y, 5, 3);
         int trefferWahrscheinlichkeit = 100;
@@ -48,7 +51,7 @@ public class Player extends Character {
         int zufall = (int) (Math.random() * 100);
 
         if (wahrscheinlichkeit > zufall) {
-            alien.setLeben();
+            alien.setLeben(-1);
             System.out.println("Der Spieler hat das Alien getroffen, an Postition " + alien);
         } else {
             System.out.println("Der Spieler hat das Alien verfehlt, an Postition " + alien);
@@ -56,4 +59,29 @@ public class Player extends Character {
 
     }
 
+    /**
+     * Benutzt das Item an der Stelle i in der Itemliste.
+     * @param i     Index des Items in der Liste.
+     */
+    public void useItem(int i) {
+        Item a = (Item)getItemListe().getItem(i);
+        getItemListe().delete(a);
+        setLeben(a.getHeal());
+    }
+
+    /**
+     * Get-Methode fuer die Itemliste
+     * @return MyList
+     */
+    public MyList getItemListe() {
+        return itemListe;
+    }
+
+    /**
+     * Fuegt ein Item in die Liste ein
+     * @param a Item
+     */
+    public void setItemListe(Item a) {
+        this.itemListe.sortedInsert(a);
+    }
 }

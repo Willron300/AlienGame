@@ -51,7 +51,7 @@ public class Alien extends Character {
                     * (1.0 - (1.0 / distance(spieler.getKoorX(), spieler.getKoorY())))));
             int zufall = (int) (Math.random() * 100);
             if (wahrscheinlichkeit > zufall) {
-                spieler.setLeben();
+                spieler.setLeben(-1);
                 System.out.printf("Der Alien %s hat den Spieler getroffen! \n", toString());
             } else {
                 System.out.printf("Der Alien %s hat das Spieler verfehlt!\n", toString());

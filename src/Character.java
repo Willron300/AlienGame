@@ -74,8 +74,8 @@ public class Character extends AlienGameObject {
     /**
      * Zum Aendern der Lebenstatus-Variable. Es wird ein Leben abgezogen.
      */
-    public void setLeben() {
-        this.leben--;
+    public void setLeben(int a) {
+        this.leben += a;
     }
 
     /**

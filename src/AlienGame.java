@@ -34,32 +34,118 @@ public class AlienGame {
      * Das wird solange wiederholt bis die ende-Funktion, welche ueberprueft
      * ob das Spiel zu Ende ist, die While-Schleife beendet.
      *
-     * @param spielfeld		Anzahl von Aliens als Integer.
+     * @param spielfeld		Map Object - das Spielfeld
      */
     public static void spiele(Map spielfeld) {
 
         while (ende(spielfeld)) {                                         // Ueberpruft ob das Spiel zu Ende ist
-            System.out.println(spielfeld);
-            System.out.println(" Der Spieler hat noch " + spielfeld.getSpieler().getLeben() + "Hitpoints");
 
-            spielfeld.getSpieler().getBewegung().start(spielfeld);      // Bewegung des Spielers
+            //test(spielfeld);
 
-            System.out.println(spielfeld);
+            zugSpieler(spielfeld);                                       // Zug des Spielers
 
-            int[] newKoord = scan(spielfeld);                           // Neue Koordinaten werden eingelesen
+            zugAlien(spielfeld);                                         // Zug des Aliens
 
-            angriffSpieler(spielfeld, newKoord);                        // Angriffszug des Spielers
-
-            for (Alien alien: spielfeld.getAliens()) {
-                if (alien.getLeben() == 1) {
-                    alien.getBewegung().start(spielfeld);               // Bewegung jedes Aliens
-                }
-
-            }
-            angriffAliens(spielfeld);                                   // Angriffszug des Aliens
         }
         gewinnNachricht(spielfeld);                                     // Erzeugt Nachricht falls Spiel zu Ende
 
+    }
+
+    /**
+     * Zum testen
+     * @param spielfeld     Map Object - das Spielfeld
+     */
+    public static void test(Map spielfeld) {
+
+        spielfeld.getSpieler().setLeben(-2);
+        spielfeld.getSpieler().setItemListe(new Item());
+        System.out.println(spielfeld);
+        System.out.println(" Der Spieler hat noch " + spielfeld.getSpieler().getLeben() + "Hitpoints");
+        benutzeItem(spielfeld);
+    }
+
+    /**
+     * Der Spielzug des Spielers.
+     * Als erstes Funktion zum Benutzen des Aliens.
+     * Danach die Bewegung und als letztes der Angriffszuges.
+     *
+     * @param spielfeld     Map Object - das Spielfeld
+     */
+    public static void zugSpieler(Map spielfeld){
+        System.out.println(spielfeld);
+        System.out.println(" Der Spieler hat noch " + spielfeld.getSpieler().getLeben() + "Hitpoints");
+
+        /*
+        Kann nur Items benutzen wenn welche vorhanden sind.
+         */
+        MyList itemList = spielfeld.getSpieler().getItemListe();
+        if (itemList.length() > 0) {
+            benutzeItem(spielfeld);
+            System.out.println(" Der Spieler hat wieder " + spielfeld.getSpieler().getLeben() + "Hitpoints");
+        }
+        spielfeld.getSpieler().getBewegung().start(spielfeld);          // Bewegung des Spielers
+
+        System.out.println(spielfeld);
+
+        int[] newKoord = scan(spielfeld);                               // Neue Koordinaten werden eingelesen
+        angriffSpieler(spielfeld, newKoord);                            // Angriffszug des Spielers
+    }
+
+    /**
+     * Der Zug des Aliens.
+     * Als erstes bewegt sich jeder Alien.
+     * Dann hat jeder Alien ein Angriffszug.
+     * @param spielfeld        Map Object - das Spielfeld
+     */
+    public static void zugAlien(Map spielfeld){
+        for (Alien alien: spielfeld.getAliens()) {
+            if (alien.getLeben() == 1) {
+                alien.getBewegung().start(spielfeld);               // Bewegung jedes Aliens
+            }
+
+        }
+        angriffAliens(spielfeld);                                   // Angriffszug des Aliens
+    }
+
+    /**
+     * Funktion zum benutzen des Items.
+     * @param spielfeld     Map Object - das Spielfeld
+     */
+    public static void benutzeItem(Map spielfeld){
+        /*
+        Der User kann ein Index uebergeben um das enstprechende
+        Item benutzen zu wollen.
+        Dann benutzt der Spieler das Item.
+         */
+        int index = scanIndexItem(spielfeld);
+        if (index != 0) {
+            spielfeld.getSpieler().useItem(index - 1);
+        }
+    }
+
+    /**
+     * Die Eingabefunktion fuer den Index.
+     * Der User kann einen Integer als Index angeben.
+     * Benutzt wird das Scanner Modul.
+     *
+     * @param spielfeld     Map Object - das Spielfeld
+     * @return  Integer des Index fuer die Itemliste
+     */
+    public static int scanIndexItem(Map spielfeld) {
+        int i;
+        while(true) {
+            System.out.print("Welches Item soll benutzt werden? Index: ");
+            try {
+                Scanner scanner = new Scanner(System.in);
+                i = scanner.nextInt();
+                if ((i >= 0) && (i <= spielfeld.getSpieler().getItemListe().length())){
+                    break;
+                }
+            } catch (InputMismatchException e) {                           // falls ein String im Terminal angegeben
+                System.out.println("Fehler beim Einlesen des Index. Bitte eine Integer Wert eingeben");
+            }
+        }
+        return i;
     }
     /**
      * Die Funktion sucht alle Aliens, welche attackiert werden sollen, und fuehrt dann einen Angriff auf diese Aliens
@@ -72,6 +158,9 @@ public class AlienGame {
             for (Alien alien : spielfeld.getAliens()) {
                 if (alien.getKoorX() == koord[0] + ziele[0] && alien.getKoorY() == koord[1] + ziele[1]) {
                     spielfeld.getSpieler().angriff(alien, spielfeld);            // Angriffsfunktion der Player-Klasse
+                    if (alien.getLeben() == 0) {
+                        spielfeld.getSpieler().setItemListe(new Item());
+                    }
                 }
             }
         }

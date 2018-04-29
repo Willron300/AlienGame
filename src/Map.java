@@ -114,7 +114,6 @@ public class Map {
      * @param irrgarten		Irrgarten vom Type AlienGameObjects[][]
      */
     public void workIrrgarten(int x, int y, AlienGameObject[][] irrgarten) {
-        kack(irrgarten);
         if (irrgarten[y][x] instanceof Wall) {
             Wall wall = (Wall) irrgarten[y][x];
             if (!wall.getMark()) {
@@ -151,7 +150,6 @@ public class Map {
 
 
                 while (!wall.getList().isEmpty()) {
-                    //System.out.println(wall.getList());
 
                     Wall nextWall = wall.getnneighourWall();
 
@@ -334,6 +332,33 @@ public class Map {
             str.append("*\n");
         }
         str.append("  " + repeat(spielfeld[0].length + 2, "*"));
+        str.append("\n");
+        MyList l = spieler.getItemListe();
+
+        /*
+        Hier wird die Itemliste zum String hinzugefuegt.
+         */
+        str.append("Item List : Anzahl der Items : " + l.length());
+        if (l.length() > 0) {
+            str.append("\n");
+            StringBuilder rowItem0 = new StringBuilder("Index: 0");
+            StringBuilder rowItem1 = new StringBuilder("       *");
+            StringBuilder rowItem2 = new StringBuilder("Heal:  -");
+
+            for (int k = 0 ; k < l.length(); k++) {
+                rowItem0.append(k+1);
+                rowItem1.append("*");
+                System.out.println(l.getItem(k));
+                rowItem2.append(l.getItem(k));
+            }
+            str.append(rowItem0);
+            str.append("\n");
+            str.append(rowItem1);
+            str.append("\n");
+            str.append(rowItem2);
+            str.append("\n");
+        }
+
         return str.toString();
     }
     /**
@@ -405,10 +430,18 @@ public class Map {
         this.spielfeld[x][y] = charakter;
     }
 
+    /**
+     * Set-Methode des Irrgarten
+     * @param irrgarten  AlienGameObject[][]
+     */
     public void setIrrgarten(AlienGameObject[][] irrgarten) {
         this.irrgarten = irrgarten;
     }
 
+    /**
+     * Get-Mehtode des Irrgarten
+     * @return AlienGameObject[][]
+     */
     public AlienGameObject[][] getIrrgarten() {
         return irrgarten;
     }

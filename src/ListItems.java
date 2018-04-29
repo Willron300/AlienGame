@@ -6,20 +6,57 @@ import java.util.Iterator;
  * @author Tim Hunte 4919764 Gruppe 3B
  */
 public interface ListItems {
+
     /**
-     * Diese abstrakte Methode soll den Charakter bewegen lassen.
+     * Ueberpruft of Liste leer ist.
      */
     boolean isEmpty();
+
     /**
-     * Diese abstrakte Methode soll den ueberpruefen ob der String der Bewegung keine Fehler enthaelt.
-     * @return boolean              Ob alles i.O. oder nicht.
+     * Gibt die Laenge der Liste zurueck
+     * @return int Laenge der Liste.
      */
     int length();
-    Object first(Object e);
+
+    /**
+     * Gibt das Erste Objekt in der Liste zurueck.
+     * @return erste Objekt in der Liste
+     */
+    Object first();
+
+    /**
+     *  Fuegt das Objekt am Anfang der List ein.
+     * @param e  das einzufuegende Objekt
+     */
     void insert(Object e);
+
+    /**
+     *  Fuegt das Objekt am Ende der List ein.
+     * @param e  das einzufuegende Objekt
+     */
     void append(Object e);
+
+    /**
+     *  Fuegt das Objekt sortiert in der List ein.
+     * @param e  das einzufuegende Objekt
+     */
     void sortedInsert(Object e);
+
+    /**
+     * Loescht das Objekt aus der Liste.
+     * @param e das zu loeschende Objekt
+     */
     void delete(Object e);
+
+    /**
+     * ???
+     */
     void iterator();
-    Object getItem();
+
+    /**
+     * Gibt das Objekt mit dem Index i zurueck
+     * @param i   Index
+     * @return Object
+     */
+    Object getItem(int i);
 }
