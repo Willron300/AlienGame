@@ -51,7 +51,7 @@ public interface ListItems {
     /**
      * ???
      */
-    void iterator();
+    Iterator iterator();
 
     /**
      * Gibt das Objekt mit dem Index i zurueck

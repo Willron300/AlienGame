@@ -1,3 +1,4 @@
+import java.util.Iterator;
 /**
  * Eine doppelt verkette zirkulaere List von Objekten.
  * 4 Klassenvariabeln: Den Vorgaenger(predessor), den Nachfolger(succesor), das zu speichernde Objekt(data)
@@ -224,7 +225,34 @@ public class MyList implements ListItems {
      * ???
      */
     @Override
-    public void iterator() {
+    public Iterator iterator() {
+		 
+		class MyIterator implements Iterator {
+			MyList list;
+			MyIterator(MyList list) {
+				this.list = list;
+			}
+			@Override
+			public Object next() {
+				MyList listnew = this.list.successor;
+				this.list = listnew;
+				return listnew.data;
+				
+			}
+			@Override
+			public boolean hasNext() {
+				MyList listnew = this.list.successor;
+				this.list = listnew; 
+				if (listnew.data == null) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		};
+		
+		Iterator itr = new MyIterator(this);
+		return itr;
     }
 
     /**
